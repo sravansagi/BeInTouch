@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.sravan.and.beintouch"
         minSdkVersion 19
         targetSdkVersion 25
@@ -28,4 +30,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.karumi:dexter:4.1.0'
 }

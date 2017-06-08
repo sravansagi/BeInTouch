@@ -1,4 +1,8 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="toolbar_text">30dp</dimen>
+    <dimen name="fab_press_translation_z">12dp</dimen>
+    <dimen name="fab_dimen">56dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    
 </resources>
