@@ -2,11 +2,17 @@ package com.sravan.and.beintouch;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -34,9 +40,11 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int CONTACT_SELECT_RESULT = 1001;
+    private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
     private MultiplePermissionsListener allPermissionsListener;
-    PermissionListener callLogdialogPermissionListener;
-    PermissionListener contactsdialogPermissionListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,29 +59,28 @@ public class MainActivity extends AppCompatActivity {
         if (typeface!=null){
             toolbarText.setTypeface(typeface);
         }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                /**
+                 * The FAB is to as a contact picker which will send an intent and wait for the other apps to
+                 * handle the contact picker request. The result of the picker is read in the onActivityResult call back
+                 */
+                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                PackageManager packageManager = getPackageManager();
+                if (contactPickerIntent.resolveActivity(packageManager) != null) {
+                    startActivityForResult(contactPickerIntent, CONTACT_SELECT_RESULT);
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "There is not application to access the contacts",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
-
-        /*callLogdialogPermissionListener =
-                DialogOnDeniedPermissionListener.Builder
-                        .withContext(this)
-                        .withTitle("Call Log Permission")
-                        .withMessage("Call Log Permission is required for the app")
-                        .withButtonText(android.R.string.ok)
-                        .build();
-        contactsdialogPermissionListener = DialogOnDeniedPermissionListener.Builder
-                .withContext(this)
-                .withTitle("Contacts Permission")
-                .withMessage("Contacts Permission is required for the app")
-                .withButtonText(android.R.string.ok)
-                .build();*/
         allPermissionsListener = new SampleMultiplePermissionListener(this);
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
@@ -85,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).check();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,4 +199,25 @@ public class MainActivity extends AppCompatActivity {
 
         return permissionType;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == CONTACT_SELECT_RESULT) {
+            Uri contactPickerResultUri = data.getData();
+            Cursor cursor = getContentResolver().query(contactPickerResultUri,
+                    CONTACT_PICKER_OUTPUT_PROJECTION,
+                    null,
+                    null,
+                    null);
+            if (cursor.moveToFirst()) {
+                String phoneNo = cursor.getString(0);
+                String name = cursor.getString(1);
+                Toast.makeText(this, "The Selected Contact is :" + name + " : " + phoneNo, Toast.LENGTH_SHORT).show();
+                Timber.d("The Selected Contact is :" + name + " : " + phoneNo );
+            }
+            cursor.close();
+    }
+}
+
 }
