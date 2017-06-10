@@ -24,11 +24,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.sravan.and.beintouch.MainActivity;
+import com.sravan.and.beintouch.ui.MainActivity;
 
 import java.util.List;
-
-import timber.log.Timber;
 
 
 /**

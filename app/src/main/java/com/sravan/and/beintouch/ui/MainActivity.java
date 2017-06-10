@@ -1,4 +1,4 @@
-package com.sravan.and.beintouch;
+package com.sravan.and.beintouch.ui;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -33,6 +33,7 @@ import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
 
