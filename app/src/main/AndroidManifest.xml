@@ -23,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.sravan.and.beintouch"
+            android:name=".data.BeInTouchContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

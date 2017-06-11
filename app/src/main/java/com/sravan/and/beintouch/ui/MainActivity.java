@@ -4,48 +4,62 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
-import com.karumi.dexter.listener.single.PermissionListener;
 import com.sravan.and.beintouch.R;
+import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
+import com.sravan.and.beintouch.data.BeInTouchContract;
+import com.sravan.and.beintouch.data.BeInTouchDbHelper;
+import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
-
 import timber.log.Timber;
+import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID;
+import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.TABLE_NAME;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int CONTACT_SELECT_RESULT = 1001;
-    private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.CommonDataKinds.Phone.NUMBER,
+    private static final int CONTACT_PICKER_RESULT = 1001;
+    private static final int CONTACTS_ENTRY_LOADER = 2001;
+    private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
-
     private MultiplePermissionsListener allPermissionsListener;
+    RecyclerView mRecyclerView;
+    TextView emptytextView;
+    RecyclerView.LayoutManager layoutManager;
+    ContactsEntryCursorAdapter contactsEntryCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
         if (typeface!=null){
             toolbarText.setTypeface(typeface);
         }
+        allPermissionsListener = new SampleMultiplePermissionListener(this);
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
+                .withListener(allPermissionsListener)
+                .onSameThread()
+                .withErrorListener(new PermissionRequestErrorListener() {
+                    @Override public void onError(DexterError error) {
+                        Timber.e("There was an error: " + error.toString());
+                    }
+                }).check();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
                 PackageManager packageManager = getPackageManager();
                 if (contactPickerIntent.resolveActivity(packageManager) != null) {
-                    startActivityForResult(contactPickerIntent, CONTACT_SELECT_RESULT);
+                    startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
                 } else {
                     Toast.makeText(getApplicationContext(),
                             "There is not application to access the contacts",
@@ -81,17 +105,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        allPermissionsListener = new SampleMultiplePermissionListener(this);
-        Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
-                .withListener(allPermissionsListener)
-                .onSameThread()
-                .withErrorListener(new PermissionRequestErrorListener() {
-                    @Override public void onError(DexterError error) {
-                        Timber.e("There was an error: " + error.toString());
-                    }
-                }).check();
+        getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
+        emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
+        mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
+        layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID);
+        mRecyclerView.setAdapter(contactsEntryCursorAdapter);
     }
 
     @Override
@@ -204,21 +224,42 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == CONTACT_SELECT_RESULT) {
+        if (resultCode == Activity.RESULT_OK && requestCode == CONTACT_PICKER_RESULT) {
             Uri contactPickerResultUri = data.getData();
-            Cursor cursor = getContentResolver().query(contactPickerResultUri,
-                    CONTACT_PICKER_OUTPUT_PROJECTION,
-                    null,
-                    null,
-                    null);
-            if (cursor.moveToFirst()) {
-                String phoneNo = cursor.getString(0);
-                String name = cursor.getString(1);
-                Toast.makeText(this, "The Selected Contact is :" + name + " : " + phoneNo, Toast.LENGTH_SHORT).show();
-                Timber.d("The Selected Contact is :" + name + " : " + phoneNo );
-            }
-            cursor.close();
+            AddContactEntry addContactEntry = new AddContactEntry(this);
+            addContactEntry.execute(contactPickerResultUri);
     }
 }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {BeInTouchContract.ContactsEntry._ID,
+                BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
+                BeInTouchContract.ContactsEntry.COLUMN_NUMBER};
+
+        return new CursorLoader(
+                this,
+                BeInTouchContract.ContactsEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        contactsEntryCursorAdapter.changeCursor(data);
+        if (contactsEntryCursorAdapter.getItemCount() > 0){
+            emptytextView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            emptytextView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 }
