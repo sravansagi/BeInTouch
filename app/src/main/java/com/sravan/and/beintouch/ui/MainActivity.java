@@ -46,7 +46,7 @@ import timber.log.Timber;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.TABLE_NAME;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,ContactsEntryCursorAdapter.OnItemClickListener {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACTS_ENTRY_LOADER = 2001;
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID, this);
         mRecyclerView.setAdapter(contactsEntryCursorAdapter);
     }
 
@@ -235,7 +235,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] projection = {BeInTouchContract.ContactsEntry._ID,
                 BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
-                BeInTouchContract.ContactsEntry.COLUMN_NUMBER};
+                BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
+                BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
+                BeInTouchContract.ContactsEntry.COLUMN_LOOKUP};
 
         return new CursorLoader(
                 this,
@@ -260,6 +262,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    /**
+     * onItemClick method is the call back listener that is defined and called when an item is clicked in the
+     * recycler adapter.
+     * @param position
+     */
+    @Override
+    public void onItemClick(int position) {
+        if (contactsEntryCursorAdapter != null){
+            Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
+            Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
+
+        }
 
     }
 }

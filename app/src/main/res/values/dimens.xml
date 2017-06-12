@@ -4,5 +4,9 @@
     <dimen name="fab_press_translation_z">12dp</dimen>
     <dimen name="fab_dimen">56dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
-    
+    <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
 </resources>
