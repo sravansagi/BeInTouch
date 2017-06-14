@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.utility.CursorRecyclerViewAdapter;
@@ -20,9 +21,14 @@ import com.sravan.and.beintouch.utility.CursorRecyclerViewAdapter;
  */
 public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<ContactsEntryCursorAdapter.ViewHolder> {
 
-    public ContactsEntryCursorAdapter(Cursor cursor, String comparisonColumn, OnItemClickListener listener){
+    /**
+     * The context has been added to load the contact image using glide library
+     */
+    Context context;
+    public ContactsEntryCursorAdapter(Cursor cursor, String comparisonColumn, OnItemClickListener listener, Context context){
         super(cursor, comparisonColumn);
         this.listener = listener;
+        this.context = context;
     }
 
 
@@ -64,8 +70,18 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor, int position) {
         String phNumber = cursor.getString(1);
+        String picture = cursor.getString(5);
         viewHolder.contactName.setText(phNumber);
         viewHolder.contactLastInteracted.setText(cursor.getString(2));
+        if(picture!= null && picture.length() > 0){
+            Glide.with(context).load(picture)
+                    .into(viewHolder.imageView);
+        } else {
+            Glide.with(context).load(R.drawable.ic_contact_thumbnail)
+                    .into(viewHolder.imageView);
+        }
+
+
     }
 
     /**

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID, this);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID, this, this);
         mRecyclerView.setAdapter(contactsEntryCursorAdapter);
     }
 
@@ -237,7 +237,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
                 BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
                 BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
-                BeInTouchContract.ContactsEntry.COLUMN_LOOKUP};
+                BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
+                BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
 
         return new CursorLoader(
                 this,
