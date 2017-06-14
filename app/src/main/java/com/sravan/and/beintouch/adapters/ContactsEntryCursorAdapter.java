@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
-import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.utility.CursorRecyclerViewAdapter;
 /**
  * Created by skyfishjy on 10/31/14.

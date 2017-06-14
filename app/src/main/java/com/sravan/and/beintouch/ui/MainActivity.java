@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,8 @@ import com.sravan.and.beintouch.data.BeInTouchDbHelper;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
+import com.sravan.and.beintouch.utility.Utilities;
+
 import timber.log.Timber;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.TABLE_NAME;
@@ -50,11 +53,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACTS_ENTRY_LOADER = 2001;
+    private static final int CALL_LOG_LOADER = 2002;
     private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
+
+    private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
+            BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
+            BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
+            BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
+            BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
+            BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
+
+    private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
+            CallLog.Calls.TYPE,
+            CallLog.Calls.DATE,
+            CallLog.Calls.DURATION,
+            CallLog.Calls.CACHED_NAME};
+
+
+
     private MultiplePermissionsListener allPermissionsListener;
     RecyclerView mRecyclerView;
     TextView emptytextView;
@@ -78,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
                 .withListener(allPermissionsListener)
-                .onSameThread()
                 .withErrorListener(new PermissionRequestErrorListener() {
                     @Override public void onError(DexterError error) {
                         Timber.e("There was an error: " + error.toString());
@@ -105,13 +125,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-        getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
         emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID, this, this);
         mRecyclerView.setAdapter(contactsEntryCursorAdapter);
+        getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
+        if(Utilities.checkPermission(this)){
+            getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
+        }
     }
 
     @Override
@@ -142,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     public void showPermissionGranted(String permission) {
         Timber.d(getTypeFromPermission(permission) + " permission granted");
+        if(Utilities.checkPermission(this)){
+            getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
+        }
     }
 
     /**
@@ -233,31 +259,52 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection = {BeInTouchContract.ContactsEntry._ID,
-                BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
-                BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
-                BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
-                BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
-                BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
-
-        return new CursorLoader(
-                this,
-                BeInTouchContract.ContactsEntry.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null);
+        switch (id) {
+            case CONTACTS_ENTRY_LOADER:
+                return new CursorLoader(
+                        this,
+                        BeInTouchContract.ContactsEntry.CONTENT_URI,
+                        CONTACTS_ENTRY_LOADER_PROJECTION,
+                        null,
+                        null,
+                        null);
+            case CALL_LOG_LOADER:
+                return new CursorLoader(
+                        this,
+                        CallLog.Calls.CONTENT_URI,
+                        CALLLOG_PROJECTION,
+                        null,
+                        null,
+                        CallLog.Calls.DEFAULT_SORT_ORDER);
+            default:
+                throw new UnsupportedOperationException("Unknown cursor loader id");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        contactsEntryCursorAdapter.changeCursor(data);
-        if (contactsEntryCursorAdapter.getItemCount() > 0){
-            emptytextView.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-        } else {
-            emptytextView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+        Timber.d( "loader" + loader.getId() + "");
+        for (String e: data.getColumnNames()) {
+            Timber.d(e);
+        }
+        switch (loader.getId()){
+            case CONTACTS_ENTRY_LOADER:
+                Timber.d("Contacts Entry result");
+                contactsEntryCursorAdapter.changeCursor(data);
+                if (contactsEntryCursorAdapter.getItemCount() > 0){
+                    emptytextView.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    emptytextView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+                break;
+            case CALL_LOG_LOADER:
+                for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
+                    Timber.d("Call log result");
+                }
+                break;
+
         }
     }
 
