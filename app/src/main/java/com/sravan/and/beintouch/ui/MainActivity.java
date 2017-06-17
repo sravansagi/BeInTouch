@@ -54,11 +54,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACTS_ENTRY_LOADER = 2001;
     private static final int CALL_LOG_LOADER = 2002;
-    private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.Contacts._ID,
-            ContactsContract.Contacts.LOOKUP_KEY,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
 
 
     private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
@@ -74,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             CallLog.Calls.DURATION,
             CallLog.Calls.CACHED_NAME};
 
-
-
     private MultiplePermissionsListener allPermissionsListener;
     RecyclerView mRecyclerView;
     TextView emptytextView;
@@ -88,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         toolbarText.setText(getResources().getString(R.string.app_name));
         Typeface typeface = FontCache.get("fonts/Pacifico-Regular.ttf", getApplicationContext());
