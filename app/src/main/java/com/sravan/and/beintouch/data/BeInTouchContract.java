@@ -36,7 +36,7 @@ public class BeInTouchContract {
         public static final String COLUMN_LOOKUP = "lookup";
         public static final String COLUMN_NUMBER = "number";
         public static final String COLUMN_DISPLAYNAME = "displayname";
-        public static final String COLUMN_PHOTO_ID ="photoid";
+        public static final String COLUMN_THUMBNAIL_PHOTO_ID ="thumbnailphotoid";
         public static final String COLUMN_LAST_CONTACTED ="lastcontact";
     }
 

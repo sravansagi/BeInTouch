@@ -5,15 +5,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +18,6 @@ import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,15 +35,12 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
 import com.sravan.and.beintouch.data.BeInTouchContract;
-import com.sravan.and.beintouch.data.BeInTouchDbHelper;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
 import com.sravan.and.beintouch.utility.Utilities;
 
 import timber.log.Timber;
-import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID;
-import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry.TABLE_NAME;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,ContactsEntryCursorAdapter.OnItemClickListener {
 
@@ -61,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
             BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
-            BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
+            BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID};
 
     private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,

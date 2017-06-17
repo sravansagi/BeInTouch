@@ -19,25 +19,25 @@ public class BeInTouchContact {
     private String lookup;
     private String phoneNumber;
     private String name;
-    private String contactPhotoID;
+    private String contactThumbnailPhotoID;
     private long lastcontacted;
 
-    public BeInTouchContact(long _id, long contactID, String lookup, String phoneNumber, String name, String contactPhotoID, long lastcontacted) {
+    public BeInTouchContact(long _id, long contactID, String lookup, String phoneNumber, String name, String contactThumbnailPhotoID, long lastcontacted) {
         this._id = _id;
         this.contactID = contactID;
         this.lookup = lookup;
         this.phoneNumber = phoneNumber;
         this.name = name;
-        this.contactPhotoID = contactPhotoID;
+        this.contactThumbnailPhotoID = contactThumbnailPhotoID;
         this.lastcontacted = lastcontacted;
     }
 
-    public BeInTouchContact(long contactID, String lookup, String phoneNumber, String name, String contactPhotoID, long lastcontacted) {
+    public BeInTouchContact(long contactID, String lookup, String phoneNumber, String name, String contactThumbnailPhotoID, long lastcontacted) {
         this.contactID = contactID;
         this.lookup = lookup;
         this.phoneNumber = phoneNumber;
         this.name = name;
-        this.contactPhotoID = contactPhotoID;
+        this.contactThumbnailPhotoID = contactThumbnailPhotoID;
         this.lastcontacted = lastcontacted;
     }
 
@@ -85,12 +85,12 @@ public class BeInTouchContact {
         this.name = name;
     }
 
-    public String getContactPhotoID() {
-        return contactPhotoID;
+    public String getContactThumbnailPhotoID() {
+        return contactThumbnailPhotoID;
     }
 
-    public void setContactPhotoID(String contactPhotoID) {
-        this.contactPhotoID = contactPhotoID;
+    public void setContactThumbnailPhotoID(String contactThumbnailPhotoID) {
+        this.contactThumbnailPhotoID = contactThumbnailPhotoID;
     }
 
     public long getLastcontacted() {
@@ -106,7 +106,7 @@ public class BeInTouchContact {
         values.put(BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,contactID);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,lookup);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,name);
-        values.put(BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID,contactPhotoID);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID, contactThumbnailPhotoID);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_NUMBER, phoneNumber);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,lastcontacted);
         return values;

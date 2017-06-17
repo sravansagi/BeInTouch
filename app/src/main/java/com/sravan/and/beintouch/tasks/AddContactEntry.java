@@ -30,7 +30,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
 
     private static final int CONTACTS_ID_COLUMN = 0;
     private static final int LOOKUP_COLUMN = 1;
-    private static final int PHOTO_COLUMN= 2;
+    private static final int THUMBNAIL_PHOTO_COLUMN = 2;
     private static final int NUMBER_COLUMN = 3;
     private static final int NAME_COLUMN  = 4;
 
@@ -81,7 +81,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 beInTouchContact.setName(cursor.getString(NAME_COLUMN));
                 beInTouchContact.setContactID(cursor.getLong(CONTACTS_ID_COLUMN));
                 beInTouchContact.setLookup(cursor.getString(LOOKUP_COLUMN));
-                beInTouchContact.setContactPhotoID(cursor.getString(PHOTO_COLUMN));
+                beInTouchContact.setContactThumbnailPhotoID(cursor.getString(THUMBNAIL_PHOTO_COLUMN));
                 String[] selectionargs = {beInTouchContact.getName(),beInTouchContact.getPhoneNumber()};
 
                 // The below query is to check if the contact is already added to the database table
