@@ -321,10 +321,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onItemClick(int position) {
         if (contactsEntryCursorAdapter != null){
-           // Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
-            //Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
-            startActivity(intent);
+            Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
+            Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
+            //Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+            // startActivity(intent);
         }
 
     }

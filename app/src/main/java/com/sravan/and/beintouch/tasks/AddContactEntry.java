@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
 import com.sravan.and.beintouch.data.BeInTouchContract;
+import com.sravan.and.beintouch.utility.Utilities;
 
 import timber.log.Timber;
 
@@ -28,9 +30,16 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
 
+    private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
+            CallLog.Calls.TYPE,
+            CallLog.Calls.DATE,
+            CallLog.Calls.DURATION};
+
     private static final String[] CONTACT_ENTRY_ID = {ContactsContract.Contacts._ID};
     private static final String SELECTION = ContactsEntry.COLUMN_DISPLAYNAME + " = ? AND " +
             ContactsEntry.COLUMN_NUMBER + " = ?";
+
+    private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " = ?";
 
     public AddContactEntry(Context context) {
         this.context = context;
@@ -60,9 +69,11 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
 
             String phoneNo = "";
             String name = "";
-            Long contactid = Long.valueOf(0);
+            long contactid = 0;
             String lookup = "";
             String photoThumbnail = "";
+            long lastContacted = 0;
+
             if (cursor != null && cursor.moveToFirst()) {
                 phoneNo = cursor.getString(3);
                 name = cursor.getString(4);
@@ -77,10 +88,28 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                         null);
                 if (cursorContact != null && cursorContact.moveToFirst()) {
                     cursor.close();
-                    cursorContact.moveToFirst();
+                    cursorContact.close();
                     // Todo(1) Add the following string to android strings resource
                     return "The Contact is already added to the list";
                 }
+
+                if(Utilities.checkPermission(context)){
+                    Cursor callLogofContact = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                            CALLLOG_CONTACT_PROJECTION,
+                            SELECTION_CALLLOG_CONTACT,
+                            new String[]{phoneNo},
+                            CallLog.Calls.DEFAULT_SORT_ORDER);
+
+                    /*if (callLogofContact!= null && callLogofContact.moveToFirst()){
+                        lastContacted = callLogofContact.getLong(3);
+                    }*/
+
+                    /*for (callLogofContact.moveToFirst(); !callLogofContact.isAfterLast(); callLogofContact.moveToNext()) {
+                        Timber.d(callLogofContact.getLong(3) + "");
+                    }*/
+                }
+
+
                 Timber.d("The Selected Contact is :" + name + " : " + phoneNo);
                 cursor.close();
             }
@@ -90,6 +119,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             values.put(ContactsEntry.COLUMN_DISPLAYNAME,name);
             values.put(ContactsEntry.COLUMN_PHOTO_ID,photoThumbnail);
             values.put(ContactsEntry.COLUMN_NUMBER, phoneNo);
+            values.put(ContactsEntry.COLUMN_LAST_CONTACTED,lastContacted);
             Uri returnUri = context.getContentResolver().insert(ContactsEntry.CONTENT_URI, values);
             if (returnUri.toString().length() > 0){
                 return "The Value has been added";
