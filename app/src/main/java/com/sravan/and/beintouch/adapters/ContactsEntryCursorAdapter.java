@@ -16,6 +16,7 @@ import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.utility.CursorRecyclerViewAdapter;
 /**
  * Created by skyfishjy on 10/31/14.
+ * Modified by emuneee on 1/5/16.
  * Edited by sravan on 13/6/2017
  */
 public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<ContactsEntryCursorAdapter.ViewHolder> {
@@ -71,7 +72,7 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
         String phNumber = cursor.getString(1);
         String picture = cursor.getString(5);
         viewHolder.contactName.setText(phNumber);
-        viewHolder.contactLastInteracted.setText(cursor.getString(2));
+        viewHolder.contactLastInteracted.setText(cursor.getString(6));
         if(picture!= null && picture.length() > 0){
             Glide.with(context).load(picture)
                     .into(viewHolder.imageView);

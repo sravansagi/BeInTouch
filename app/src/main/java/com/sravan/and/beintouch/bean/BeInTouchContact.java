@@ -5,6 +5,8 @@ package com.sravan.and.beintouch.bean;
  */
 
 import android.content.ContentValues;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.sravan.and.beintouch.data.BeInTouchContract;
 
@@ -12,7 +14,7 @@ import com.sravan.and.beintouch.data.BeInTouchContract;
  * The {@link BeInTouchContact} class is the bean class that holds data of a row in the contactentry table of the
  * beintouch database. The class provides the various utility methods.
  */
-public class BeInTouchContact {
+public class BeInTouchContact implements Parcelable {
 
     private long _id;
     private long contactID;
@@ -44,6 +46,8 @@ public class BeInTouchContact {
     public BeInTouchContact() {
 
     }
+
+
 
     public long get_id() {
         return _id;
@@ -111,4 +115,43 @@ public class BeInTouchContact {
         values.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,lastcontacted);
         return values;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this._id);
+        dest.writeLong(this.contactID);
+        dest.writeString(this.lookup);
+        dest.writeString(this.phoneNumber);
+        dest.writeString(this.name);
+        dest.writeString(this.contactThumbnailPhotoID);
+        dest.writeLong(this.lastcontacted);
+    }
+
+    protected BeInTouchContact(Parcel in) {
+        this._id = in.readLong();
+        this.contactID = in.readLong();
+        this.lookup = in.readString();
+        this.phoneNumber = in.readString();
+        this.name = in.readString();
+        this.contactThumbnailPhotoID = in.readString();
+        this.lastcontacted = in.readLong();
+    }
+
+    public static final Parcelable.Creator<BeInTouchContact> CREATOR = new Parcelable.Creator<BeInTouchContact>() {
+        @Override
+        public BeInTouchContact createFromParcel(Parcel source) {
+            return new BeInTouchContact(source);
+        }
+
+        @Override
+        public BeInTouchContact[] newArray(int size) {
+            return new BeInTouchContact[size];
+        }
+    };
 }

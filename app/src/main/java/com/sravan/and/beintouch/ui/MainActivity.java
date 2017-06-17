@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
             BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
-            BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID};
+            BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID,
+            BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED};
 
     private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
@@ -307,9 +308,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onItemClick(int position) {
         if (contactsEntryCursorAdapter != null){
             Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
-            Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
-            //Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
-            // startActivity(intent);
+            //Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+            startActivity(intent);
         }
 
     }
