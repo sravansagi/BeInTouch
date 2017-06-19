@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
+import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.utility.CursorRecyclerViewAdapter;
 /**
  * Created by skyfishjy on 10/31/14.
@@ -25,6 +26,9 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
      * The context has been added to load the contact image using glide library
      */
     Context context;
+
+
+
     public ContactsEntryCursorAdapter(Cursor cursor, String comparisonColumn, OnItemClickListener listener, Context context){
         super(cursor, comparisonColumn);
         this.listener = listener;
@@ -94,6 +98,30 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
         if (cursor != null && cursor.moveToPosition(position)) {
             return ContactsContract.Contacts.getLookupUri(cursor.getLong(3),
                     cursor.getString(4));
+        }
+        return null;
+    }
+
+    private static final int NAME_COLUMN  = 1;
+    private static final int NUMBER_COLUMN = 2;
+    private static final int CONTACTS_ID_COLUMN = 3;
+    private static final int LOOKUP_COLUMN = 4;
+    private static final int THUMBNAIL_PHOTO_COLUMN = 5;
+    private static final int LAST_CONTACTED = 6;
+
+
+
+    public BeInTouchContact createContactfromCursor(int position){
+        Cursor cursor = getCursor();
+        if (cursor != null && cursor.moveToPosition(position)) {
+            BeInTouchContact beInTouchContact = new BeInTouchContact();
+            beInTouchContact.setPhoneNumber(cursor.getString(NUMBER_COLUMN));
+            beInTouchContact.setName(cursor.getString(NAME_COLUMN));
+            beInTouchContact.setContactID(cursor.getLong(CONTACTS_ID_COLUMN));
+            beInTouchContact.setLookup(cursor.getString(LOOKUP_COLUMN));
+            beInTouchContact.setContactThumbnailPhotoID(cursor.getString(THUMBNAIL_PHOTO_COLUMN));
+            beInTouchContact.setLastcontacted(cursor.getLong(LAST_CONTACTED));
+            return beInTouchContact;
         }
         return null;
     }

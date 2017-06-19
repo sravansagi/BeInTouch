@@ -1,8 +1,10 @@
 package com.sravan.and.beintouch.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,9 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sravan.and.beintouch.R;
+import com.sravan.and.beintouch.bean.BeInTouchContact;
 
 
 public class ContactDetailFragment extends Fragment {
+
+    BeInTouchContact beInTouchContact;
 
     public ContactDetailFragment() {
     }
@@ -50,6 +55,22 @@ public class ContactDetailFragment extends Fragment {
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getActivity().getIntent();
+        if (intent!= null){
+            BeInTouchContact beInTouchContact = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+            if(beInTouchContact != null){
+                CollapsingToolbarLayout collapsingToolbar =
+                        (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
+                collapsingToolbar.setTitle(beInTouchContact.getName());
+            }
+        }
+
+
+        /*CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
+        collapsingToolbar.setTitle("Sravan");*/
+
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

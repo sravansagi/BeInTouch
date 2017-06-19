@@ -34,6 +34,7 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
+import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.utility.FontCache;
@@ -301,15 +302,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * onItemClick method is the call back listener that is defined and called when an item is clicked in the
-     * recycler adapter.
-     * @param position
+     * recycler adapter. Here the required parcelable infromation will is captured in an intent and is passed to
+     * the required activity/fragment
+     * @param position the number in the list displayed in the recycler view
      */
     @Override
     public void onItemClick(int position) {
         if (contactsEntryCursorAdapter != null){
-            Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
+            //Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
+            BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
             //Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class);
+            Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class)
+                    .putExtra(Intent.EXTRA_TEXT, beInTouchContact);
             startActivity(intent);
         }
 
