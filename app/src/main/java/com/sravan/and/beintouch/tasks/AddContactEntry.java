@@ -48,7 +48,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
     private static final String SELECTION_CONTACT_ENTRY = ContactsEntry.COLUMN_DISPLAYNAME + " = ? AND " +
             ContactsEntry.COLUMN_NUMBER + " = ?";
 
-    private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " = ?";
+    private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
 
     public AddContactEntry(Context context) {
         this.context = context;
@@ -99,10 +99,12 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
 
                 // The below query is to check if the user has contacted the selected contact
                 if(Utilities.checkPermission(context)){
+                    String phoneNumberwithoutSpaces = beInTouchContact.getPhoneNumber().replaceAll(" ", "");
+                    String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
                     Cursor callLogofContact = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                             CALLLOG_CONTACT_PROJECTION,
                             SELECTION_CALLLOG_CONTACT,
-                            new String[]{beInTouchContact.getPhoneNumber()},
+                            new String[]{"%" + phoneNumberwithoutEncoding +"%"},
                             CallLog.Calls.DEFAULT_SORT_ORDER);
 
                     if (callLogofContact!= null && callLogofContact.moveToFirst()){

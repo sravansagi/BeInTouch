@@ -10,6 +10,8 @@ import android.os.Parcelable;
 
 import com.sravan.and.beintouch.data.BeInTouchContract;
 
+import java.util.Date;
+
 /**
  * The {@link BeInTouchContact} class is the bean class that holds data of a row in the contactentry table of the
  * beintouch database. The class provides the various utility methods.
@@ -23,6 +25,8 @@ public class BeInTouchContact implements Parcelable {
     private String name;
     private String contactThumbnailPhotoID;
     private long lastcontacted;
+
+    private static final String NEVER_INTERACTED = "No Interaction";
 
     public BeInTouchContact(long _id, long contactID, String lookup, String phoneNumber, String name, String contactThumbnailPhotoID, long lastcontacted) {
         this._id = _id;
@@ -116,7 +120,24 @@ public class BeInTouchContact implements Parcelable {
         return values;
     }
 
+    public static String getLastInteraction(long lastcontacted){
+        if (lastcontacted == 0){
+            return NEVER_INTERACTED;
+        }
+        Date currentDate = new Date();
+        long currentTime = currentDate.getTime();
 
+        long diffTime = currentTime - lastcontacted;
+        // Since the time is stored in epoch format, it is converted to sec
+        long diffSec = diffTime/1000;
+        if(diffSec < 3600){
+            return  "Last Interacted " + diffSec/60 + " min(s) ago";
+        } else if (diffSec < 86400){
+            return  "Last Interacted " + (diffSec/60)/60 + " hour(s) ago" ;
+        } else {
+            return  "Last Interacted " + ((diffSec/60)/60)/24 + " day(s) ago" ;
+        }
+    }
     @Override
     public int describeContents() {
         return 0;

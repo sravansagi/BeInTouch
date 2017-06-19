@@ -26,6 +26,13 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
      * The context has been added to load the contact image using glide library
      */
     Context context;
+    private static final int NAME_COLUMN  = 1;
+    private static final int NUMBER_COLUMN = 2;
+    private static final int CONTACTS_ID_COLUMN = 3;
+    private static final int LOOKUP_COLUMN = 4;
+    private static final int THUMBNAIL_PHOTO_COLUMN = 5;
+    private static final int LAST_CONTACTED = 6;
+
 
 
 
@@ -73,10 +80,11 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor, int position) {
-        String phNumber = cursor.getString(1);
-        String picture = cursor.getString(5);
-        viewHolder.contactName.setText(phNumber);
-        viewHolder.contactLastInteracted.setText(cursor.getString(6));
+        String name = cursor.getString(NAME_COLUMN);
+        String picture = cursor.getString(THUMBNAIL_PHOTO_COLUMN);
+        viewHolder.contactName.setText(name);
+        viewHolder.contactLastInteracted.
+                setText(BeInTouchContact.getLastInteraction(cursor.getLong(LAST_CONTACTED)));
         if(picture!= null && picture.length() > 0){
             Glide.with(context).load(picture)
                     .into(viewHolder.imageView);
@@ -101,14 +109,6 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
         }
         return null;
     }
-
-    private static final int NAME_COLUMN  = 1;
-    private static final int NUMBER_COLUMN = 2;
-    private static final int CONTACTS_ID_COLUMN = 3;
-    private static final int LOOKUP_COLUMN = 4;
-    private static final int THUMBNAIL_PHOTO_COLUMN = 5;
-    private static final int LAST_CONTACTED = 6;
-
 
 
     public BeInTouchContact createContactfromCursor(int position){
