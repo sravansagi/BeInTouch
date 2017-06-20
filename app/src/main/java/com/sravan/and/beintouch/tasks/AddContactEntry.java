@@ -26,13 +26,15 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.Contacts.PHOTO_URI};
 
     private static final int CONTACTS_ID_COLUMN = 0;
     private static final int LOOKUP_COLUMN = 1;
     private static final int THUMBNAIL_PHOTO_COLUMN = 2;
     private static final int NUMBER_COLUMN = 3;
     private static final int NAME_COLUMN  = 4;
+    private static final int PHOTO_COLUMN  = 5;
 
 
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
@@ -82,6 +84,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 beInTouchContact.setContactID(cursor.getLong(CONTACTS_ID_COLUMN));
                 beInTouchContact.setLookup(cursor.getString(LOOKUP_COLUMN));
                 beInTouchContact.setContactThumbnailPhotoID(cursor.getString(THUMBNAIL_PHOTO_COLUMN));
+                beInTouchContact.setPhotoID(cursor.getString(PHOTO_COLUMN));
                 String[] selectionargs = {beInTouchContact.getName(),beInTouchContact.getPhoneNumber()};
 
                 // The below query is to check if the contact is already added to the database table

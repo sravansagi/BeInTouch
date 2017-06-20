@@ -25,27 +25,9 @@ public class BeInTouchContact implements Parcelable {
     private String name;
     private String contactThumbnailPhotoID;
     private long lastcontacted;
+    private String photoID;
 
     private static final String NEVER_INTERACTED = "No Interaction";
-
-    public BeInTouchContact(long _id, long contactID, String lookup, String phoneNumber, String name, String contactThumbnailPhotoID, long lastcontacted) {
-        this._id = _id;
-        this.contactID = contactID;
-        this.lookup = lookup;
-        this.phoneNumber = phoneNumber;
-        this.name = name;
-        this.contactThumbnailPhotoID = contactThumbnailPhotoID;
-        this.lastcontacted = lastcontacted;
-    }
-
-    public BeInTouchContact(long contactID, String lookup, String phoneNumber, String name, String contactThumbnailPhotoID, long lastcontacted) {
-        this.contactID = contactID;
-        this.lookup = lookup;
-        this.phoneNumber = phoneNumber;
-        this.name = name;
-        this.contactThumbnailPhotoID = contactThumbnailPhotoID;
-        this.lastcontacted = lastcontacted;
-    }
 
     public BeInTouchContact() {
     }
@@ -111,6 +93,14 @@ public class BeInTouchContact implements Parcelable {
         this.lastcontacted = lastcontacted;
     }
 
+    public String getPhotoID() {
+        return photoID;
+    }
+
+    public void setPhotoID(String photoID) {
+        this.photoID = photoID;
+    }
+
     public ContentValues createCVforContact(){
         ContentValues values = new ContentValues();
         values.put(BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,contactID);
@@ -119,6 +109,7 @@ public class BeInTouchContact implements Parcelable {
         values.put(BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID, contactThumbnailPhotoID);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_NUMBER, phoneNumber);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,lastcontacted);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID, photoID);
         return values;
     }
 
@@ -154,6 +145,7 @@ public class BeInTouchContact implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.contactThumbnailPhotoID);
         dest.writeLong(this.lastcontacted);
+        dest.writeString(this.photoID);
     }
 
     protected BeInTouchContact(Parcel in) {
@@ -164,6 +156,7 @@ public class BeInTouchContact implements Parcelable {
         this.name = in.readString();
         this.contactThumbnailPhotoID = in.readString();
         this.lastcontacted = in.readLong();
+        this.photoID = in.readString();
     }
 
     public static final Parcelable.Creator<BeInTouchContact> CREATOR = new Parcelable.Creator<BeInTouchContact>() {

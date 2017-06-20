@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
             BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID,
-            BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED};
+            BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,
+            BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
 
     private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,

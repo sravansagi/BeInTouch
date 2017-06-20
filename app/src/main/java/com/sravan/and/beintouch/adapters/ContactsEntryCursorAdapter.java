@@ -32,6 +32,7 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
     private static final int LOOKUP_COLUMN = 4;
     private static final int THUMBNAIL_PHOTO_COLUMN = 5;
     private static final int LAST_CONTACTED = 6;
+    private static final int PHOTO_ID_COLUMN = 7;
 
 
 
@@ -121,6 +122,7 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
             beInTouchContact.setLookup(cursor.getString(LOOKUP_COLUMN));
             beInTouchContact.setContactThumbnailPhotoID(cursor.getString(THUMBNAIL_PHOTO_COLUMN));
             beInTouchContact.setLastcontacted(cursor.getLong(LAST_CONTACTED));
+            beInTouchContact.setPhotoID(cursor.getString(PHOTO_ID_COLUMN));
             return beInTouchContact;
         }
         return null;

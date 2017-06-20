@@ -25,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 
+import timber.log.Timber;
+
 
 public class ContactDetailFragment extends Fragment {
 
@@ -93,7 +95,11 @@ public class ContactDetailFragment extends Fragment {
         });
 
         ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
-        if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+        if((beInTouchContact.getPhotoID()!= null && beInTouchContact.getPhotoID().length() > 0)){
+            Glide.with(getContext())
+                    .load(beInTouchContact.getPhotoID())
+                    .into(contactPhotoView);
+        } else if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
             Glide.with(getContext())
                     .load(beInTouchContact.getContactThumbnailPhotoID())
                     .into(contactPhotoView);

@@ -30,6 +30,7 @@ public class BeInTouchDbHelper extends SQLiteOpenHelper {
                 ContactsEntry.COLUMN_NUMBER         + " TEXT, " +
                 ContactsEntry.COLUMN_DISPLAYNAME    + " TEXT, " +
                 ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID + " TEXT," +
+                ContactsEntry.COLUMN_PHOTO_ID + " TEXT," +
                 ContactsEntry.COLUMN_LAST_CONTACTED + " INTERGER DEFAULT 0);";
         sqLiteDatabase.execSQL(CREATE_TABLE);
         }
