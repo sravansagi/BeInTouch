@@ -19,6 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:title="Contact Detail"
+            app:collapsedTitleGravity="start"
+            app:expandedTitleGravity="start|bottom"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -50,7 +52,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_person_add_black_24dp"
+        app:srcCompat="@drawable/ic_call_24dp"
         android:tint="@android:color/white"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,8 +2,10 @@ package com.sravan.and.beintouch.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
@@ -58,7 +61,7 @@ public class ContactDetailFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
         if (intent!= null){
-            BeInTouchContact beInTouchContact = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+            beInTouchContact = intent.getParcelableExtra(Intent.EXTRA_TEXT);
             if(beInTouchContact != null){
                 CollapsingToolbarLayout collapsingToolbar =
                         (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
@@ -66,17 +69,24 @@ public class ContactDetailFragment extends Fragment {
             }
         }
 
-
-        /*CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
-        collapsingToolbar.setTitle("Sravan");*/
-
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (beInTouchContact.getPhoneNumber() != null){
+                    Intent callContactIntent =  new Intent(Intent.ACTION_VIEW);
+                    PackageManager packageManager = getContext().getPackageManager();
+                    if (callContactIntent.resolveActivity(packageManager) != null) {
+                        callContactIntent.setData(Uri.parse("tel:"+ beInTouchContact.getPhoneNumber()));
+                        startActivity(callContactIntent);
+                    } else {
+                        Toast.makeText(getContext(),"There is not application to make a phone call",
+                                Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(),"There is some problem in opening the selected contact. Please try again",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
         return rootView;
