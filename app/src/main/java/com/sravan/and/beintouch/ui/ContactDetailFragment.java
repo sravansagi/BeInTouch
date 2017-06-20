@@ -18,8 +18,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 
@@ -89,6 +91,13 @@ public class ContactDetailFragment extends Fragment {
                 }
             }
         });
+
+        ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
+        if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+            Glide.with(getContext())
+                    .load(beInTouchContact.getContactThumbnailPhotoID())
+                    .into(contactPhotoView);
+        }
         return rootView;
     }
 }
