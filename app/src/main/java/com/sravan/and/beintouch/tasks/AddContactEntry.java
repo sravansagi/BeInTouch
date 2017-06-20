@@ -117,7 +117,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             }
             ContentValues contactCV = beInTouchContact.createCVforContact();
             Uri returnUri = context.getContentResolver().insert(ContactsEntry.CONTENT_URI, contactCV);
-            if (returnUri.toString().length() > 0){
+            if (returnUri != null && returnUri.toString().length() > 0){
                 return "The Value has been added";
             } else {
                 return null;

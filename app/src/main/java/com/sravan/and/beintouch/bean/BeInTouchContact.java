@@ -48,10 +48,12 @@ public class BeInTouchContact implements Parcelable {
     }
 
     public BeInTouchContact() {
-
     }
 
-
+    public BeInTouchContact(long _id, long lastcontacted) {
+        this._id = _id;
+        this.lastcontacted = lastcontacted;
+    }
 
     public long get_id() {
         return _id;

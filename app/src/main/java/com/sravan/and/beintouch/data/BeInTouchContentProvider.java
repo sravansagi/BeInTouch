@@ -101,7 +101,23 @@ public class BeInTouchContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not yet implemented");
-        //return 0;
+
+        {
+            final SQLiteDatabase db = beInTouchDbHelper.getWritableDatabase();
+            int match = sUriMatcher.match(uri);
+            int rowsUpdated = 0;
+            switch (match){
+                case CONTACT_ENTRIES:
+                    rowsUpdated = db.update(ContactsEntry.TABLE_NAME,
+                            values,
+                            selection,
+                            selectionArgs);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Unknown uri: " + uri);
+            }
+            getContext().getContentResolver().notifyChange(uri, null);
+            return rowsUpdated;
+        }
     }
 }

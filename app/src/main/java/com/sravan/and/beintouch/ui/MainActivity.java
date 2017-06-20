@@ -37,6 +37,7 @@ import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
+import com.sravan.and.beintouch.tasks.UpdateContactLastInteraction;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
 import com.sravan.and.beintouch.utility.Utilities;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry._ID, this, this);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
         mRecyclerView.setAdapter(contactsEntryCursorAdapter);
         getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
         if(Utilities.checkPermission(this)){
@@ -270,13 +271,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Timber.d( "loader" + loader.getId() + "");
-        for (String e: data.getColumnNames()) {
-            Timber.d(e);
-        }
         switch (loader.getId()){
             case CONTACTS_ENTRY_LOADER:
-                Timber.d("Contacts Entry result");
                 contactsEntryCursorAdapter.changeCursor(data);
                 if (contactsEntryCursorAdapter.getItemCount() > 0){
                     emptytextView.setVisibility(View.GONE);
@@ -287,9 +283,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 break;
             case CALL_LOG_LOADER:
-                for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
-                    Timber.d("Call log result");
-                }
+                UpdateContactLastInteraction updateContactLastInteraction = new UpdateContactLastInteraction(this);
+                updateContactLastInteraction.execute();
                 break;
 
         }
