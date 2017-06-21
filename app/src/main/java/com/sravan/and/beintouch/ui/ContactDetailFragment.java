@@ -135,7 +135,6 @@ public class ContactDetailFragment extends Fragment {
                 contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
                 if(Utilities.checkPermission(getContext())){
-                    //this.processCallLogData();
                     RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
                     retrieveCallLogsforSelectedContact.execute(beInTouchContact);
 

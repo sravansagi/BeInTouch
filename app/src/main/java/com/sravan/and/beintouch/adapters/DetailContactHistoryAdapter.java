@@ -49,7 +49,7 @@ public class DetailContactHistoryAdapter extends
     public void onBindViewHolder(ViewHolder holder, int position) {
         String name = contactName;
         holder.contactName.setText(name);
-        holder.contactLastInteracted.setText(BeInTouchContact.getLastInteraction(callEntries
+        holder.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(callEntries
                                 .get(position)
                                 .getDate()));
         Glide.with(context).load(R.drawable.ic_contact_thumbnail)
@@ -65,7 +65,6 @@ public class DetailContactHistoryAdapter extends
             return 0;
         }
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView contactName;

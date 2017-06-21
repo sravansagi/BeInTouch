@@ -131,6 +131,26 @@ public class BeInTouchContact implements Parcelable {
             return  "Last Interacted " + ((diffSec/60)/60)/24 + " day(s) ago" ;
         }
     }
+
+    public static String getLastInteractedHistory(long lastcontacted){
+        if (lastcontacted == 0){
+            return NEVER_INTERACTED;
+        }
+        Date currentDate = new Date();
+        long currentTime = currentDate.getTime();
+
+        long diffTime = currentTime - lastcontacted;
+        // Since the time is stored in epoch format, it is converted to sec
+        long diffSec = diffTime/1000;
+        if(diffSec < 3600){
+            return  diffSec/60 + " min(s) ago";
+        } else if (diffSec < 86400){
+            return  (diffSec/60)/60 + " hour(s) ago" ;
+        } else {
+            return  ((diffSec/60)/60)/24 + " day(s) ago" ;
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
