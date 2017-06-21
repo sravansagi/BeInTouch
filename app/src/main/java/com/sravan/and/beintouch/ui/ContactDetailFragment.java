@@ -3,15 +3,17 @@ package com.sravan.and.beintouch.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.CallLog;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,15 +24,47 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
+import com.sravan.and.beintouch.bean.CallEntry;
+import com.sravan.and.beintouch.utility.Utilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
+
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 
 
 public class ContactDetailFragment extends Fragment {
 
     BeInTouchContact beInTouchContact;
+
+    private static final String YOU = "You";
+    private static final String CALLINITIATION_PIECHART_DESC= "Call Initiation";
+
+    long incomingDuration = 0;
+    long outgoingDuration = 0;
+
+    ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
+    public static final int[] MATERIAL_COLORS = {
+            rgb("#03A9F4"), rgb("#ff64c2f4")};
+
+    private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
+            CallLog.Calls.NUMBER,
+            CallLog.Calls.TYPE,
+            CallLog.Calls.DATE,
+            CallLog.Calls.DURATION};
+
+    private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
 
     public ContactDetailFragment() {
     }
@@ -70,6 +104,21 @@ public class ContactDetailFragment extends Fragment {
                 CollapsingToolbarLayout collapsingToolbar =
                         (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
                 collapsingToolbar.setTitle(beInTouchContact.getName());
+                ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
+                if((beInTouchContact.getPhotoID()!= null && beInTouchContact.getPhotoID().length() > 0)){
+                    Glide.with(getContext())
+                            .load(beInTouchContact.getPhotoID())
+                            .into(contactPhotoView);
+                } else if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+                    Glide.with(getContext())
+                            .load(beInTouchContact.getContactThumbnailPhotoID())
+                            .into(contactPhotoView);
+                }
+
+                if(Utilities.checkPermission(getContext())){
+                    this.processCallLogData();
+                    this.drawCallInitiationGraph(rootView);
+                }
             }
         }
 
@@ -93,17 +142,78 @@ public class ContactDetailFragment extends Fragment {
                 }
             }
         });
-
-        ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
-        if((beInTouchContact.getPhotoID()!= null && beInTouchContact.getPhotoID().length() > 0)){
-            Glide.with(getContext())
-                    .load(beInTouchContact.getPhotoID())
-                    .into(contactPhotoView);
-        } else if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
-            Glide.with(getContext())
-                    .load(beInTouchContact.getContactThumbnailPhotoID())
-                    .into(contactPhotoView);
-        }
         return rootView;
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void processCallLogData() {
+        String phoneNumberwithoutSpaces = beInTouchContact.getPhoneNumber().replaceAll(" ", "");
+        String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
+        Cursor callLogofContact = getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                CALLLOG_CONTACT_PROJECTION,
+                SELECTION_CALLLOG_CONTACT,
+                new String[]{"%" + phoneNumberwithoutEncoding +"%"},
+                CallLog.Calls.DEFAULT_SORT_ORDER);
+        for (callLogofContact.moveToFirst(); !callLogofContact.isAfterLast(); callLogofContact.moveToNext()) {
+            CallEntry callEntry = new CallEntry();
+            callEntry.setIncoming(callLogofContact.getInt(2));
+            callEntry.setDate(callLogofContact.getLong(3));
+            callEntry.setDuration(callLogofContact.getLong(4));
+            callEntries.add(callEntry);
+        }
+
+        for (CallEntry entry:callEntries) {
+            if(entry.getIncoming()){
+                incomingDuration = incomingDuration + entry.getDuration();
+            } else {
+                outgoingDuration = outgoingDuration + entry.getDuration();
+            }
+        }
+    }
+
+
+    /**
+     * The drawCallInitiationGraph method creates a pie chart showing the incoming and outgoing calls of a selected contact
+     *
+     * @param rootView
+     */
+    private void drawCallInitiationGraph(View rootView){
+
+        PieChart pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+        Description des = pieChart.getDescription();
+        des.setEnabled(false);
+        pieChart.setRotationAngle(0);
+        pieChart.setRotationEnabled(false);
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setHighlightPerTapEnabled(true);
+
+        // Creating datas for the pie chart
+
+        List<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(incomingDuration, beInTouchContact.getName()));
+        entries.add(new PieEntry(outgoingDuration, YOU));
+        PieDataSet set = new PieDataSet(entries, CALLINITIATION_PIECHART_DESC);
+        set.setColors(ColorTemplate.MATERIAL_COLORS);
+
+
+        PieData data = new PieData(set);
+        data.setDrawValues(false);
+        pieChart.setData(data);
+
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setHoleRadius(60);
+
+        // Updating the pirchart legend
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(0f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+        pieChart.invalidate();
     }
 }
