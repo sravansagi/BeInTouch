@@ -1,6 +1,5 @@
 package com.sravan.and.beintouch.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,6 +11,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,14 +34,13 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sravan.and.beintouch.R;
+import com.sravan.and.beintouch.adapters.DetailContactHistoryAdapter;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.bean.CallEntry;
 import com.sravan.and.beintouch.utility.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 
@@ -66,6 +66,13 @@ public class ContactDetailFragment extends Fragment {
             CallLog.Calls.DURATION};
 
     private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
+
+    RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager layoutManager;
+    PieChart pieChart;
+    TextView contactDetailEmptyView;
+    DetailContactHistoryAdapter detailContactHistoryAdapter;
+
 
     public ContactDetailFragment() {
     }
@@ -123,8 +130,8 @@ public class ContactDetailFragment extends Fragment {
                             .into(contactPhotoView);
                 }
 
-                PieChart pieChart = (PieChart) rootView.findViewById(R.id.piechart);
-                TextView contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
+                pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+                contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
 
                 if(Utilities.checkPermission(getContext())){
                     this.processCallLogData();
@@ -132,11 +139,18 @@ public class ContactDetailFragment extends Fragment {
                         contactDetailEmptyView.setVisibility(View.GONE);
                         pieChart.setVisibility(View.VISIBLE);
                         this.drawCallInitiationGraph(pieChart);
+                        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        layoutManager = new LinearLayoutManager(getContext());
+                        mRecyclerView.setLayoutManager(layoutManager);
+                        detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
+                                callEntries, beInTouchContact.getName());
+                        mRecyclerView.setAdapter(detailContactHistoryAdapter);
                     } else {
                         contactDetailEmptyView.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
                         pieChart.setVisibility(View.GONE);
                     }
-
                 }
             }
         }
