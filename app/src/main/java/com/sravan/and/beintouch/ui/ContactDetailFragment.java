@@ -37,6 +37,7 @@ import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.adapters.DetailContactHistoryAdapter;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.bean.CallEntry;
+import com.sravan.and.beintouch.tasks.RetrieveCallLogsforSelectedContact;
 import com.sravan.and.beintouch.utility.Utilities;
 
 import java.util.ArrayList;
@@ -132,25 +133,12 @@ public class ContactDetailFragment extends Fragment {
 
                 pieChart = (PieChart) rootView.findViewById(R.id.piechart);
                 contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
-
+                mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
                 if(Utilities.checkPermission(getContext())){
-                    this.processCallLogData();
-                    if(incomingDuration > 0 || outgoingDuration > 0){
-                        contactDetailEmptyView.setVisibility(View.GONE);
-                        pieChart.setVisibility(View.VISIBLE);
-                        this.drawCallInitiationGraph(pieChart);
-                        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        layoutManager = new LinearLayoutManager(getContext());
-                        mRecyclerView.setLayoutManager(layoutManager);
-                        detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
-                                callEntries, beInTouchContact.getName());
-                        mRecyclerView.setAdapter(detailContactHistoryAdapter);
-                    } else {
-                        contactDetailEmptyView.setVisibility(View.VISIBLE);
-                        mRecyclerView.setVisibility(View.GONE);
-                        pieChart.setVisibility(View.GONE);
-                    }
+                    //this.processCallLogData();
+                    RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
+                    retrieveCallLogsforSelectedContact.execute(beInTouchContact);
+
                 }
             }
         }
@@ -248,5 +236,32 @@ public class ContactDetailFragment extends Fragment {
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
         pieChart.invalidate();
+    }
+
+    public void onCall(ArrayList<CallEntry> callEntries) {
+
+        for (CallEntry entry:callEntries) {
+            if(entry.getIncoming()){
+                incomingDuration = incomingDuration + entry.getDuration();
+            } else {
+                outgoingDuration = outgoingDuration + entry.getDuration();
+            }
+        }
+
+        if(incomingDuration > 0 || outgoingDuration > 0){
+            contactDetailEmptyView.setVisibility(View.GONE);
+            pieChart.setVisibility(View.VISIBLE);
+            this.drawCallInitiationGraph(pieChart);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            layoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(layoutManager);
+            detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
+                    callEntries, beInTouchContact.getName());
+            mRecyclerView.setAdapter(detailContactHistoryAdapter);
+        } else {
+            contactDetailEmptyView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            pieChart.setVisibility(View.GONE);
+        }
     }
 }
