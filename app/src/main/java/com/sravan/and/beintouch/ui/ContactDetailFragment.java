@@ -105,6 +105,13 @@ public class ContactDetailFragment extends Fragment {
                 CollapsingToolbarLayout collapsingToolbar =
                         (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
                 collapsingToolbar.setTitle(beInTouchContact.getName());
+                boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
+
+                if (isRightToLeft){
+                    collapsingToolbar.setExpandedTitleGravity(Gravity.RIGHT | Gravity.BOTTOM);
+                    collapsingToolbar.setCollapsedTitleGravity(Gravity.RIGHT);
+                }
+
                 ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
                 if((beInTouchContact.getPhotoID()!= null && beInTouchContact.getPhotoID().length() > 0)){
                     Glide.with(getContext())
