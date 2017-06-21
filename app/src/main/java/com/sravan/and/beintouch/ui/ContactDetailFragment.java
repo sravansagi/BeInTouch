@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -115,9 +116,20 @@ public class ContactDetailFragment extends Fragment {
                             .into(contactPhotoView);
                 }
 
+                PieChart pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+                TextView contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
+
                 if(Utilities.checkPermission(getContext())){
                     this.processCallLogData();
-                    this.drawCallInitiationGraph(rootView);
+                    if(incomingDuration > 0 || outgoingDuration > 0){
+                        contactDetailEmptyView.setVisibility(View.GONE);
+                        pieChart.setVisibility(View.VISIBLE);
+                        this.drawCallInitiationGraph(pieChart);
+                    } else {
+                        contactDetailEmptyView.setVisibility(View.VISIBLE);
+                        pieChart.setVisibility(View.GONE);
+                    }
+
                 }
             }
         }
@@ -175,11 +187,11 @@ public class ContactDetailFragment extends Fragment {
     /**
      * The drawCallInitiationGraph method creates a pie chart showing the incoming and outgoing calls of a selected contact
      *
-     * @param rootView
+     * @param pieChart
      */
-    private void drawCallInitiationGraph(View rootView){
+    private void drawCallInitiationGraph(PieChart pieChart){
 
-        PieChart pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+
         Description des = pieChart.getDescription();
         des.setEnabled(false);
         pieChart.setRotationAngle(0);
