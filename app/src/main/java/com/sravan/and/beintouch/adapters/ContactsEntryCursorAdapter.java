@@ -89,6 +89,9 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
         if(picture!= null && picture.length() > 0){
             Glide.with(context).load(picture)
                     .into(viewHolder.imageView);
+        } else {
+            Glide.with(context).load(R.drawable.ic_contact_thumbnail)
+                    .into(viewHolder.imageView);
         }
 
 

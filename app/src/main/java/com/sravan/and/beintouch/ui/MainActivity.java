@@ -38,6 +38,7 @@ import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
+import com.sravan.and.beintouch.tasks.DeleteContactEntry;
 import com.sravan.and.beintouch.tasks.UpdateContactLastInteraction;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private MultiplePermissionsListener allPermissionsListener;
     RecyclerView mRecyclerView;
     TextView emptytextView;
+    Cursor mcursor;
     RecyclerView.LayoutManager layoutManager;
     ContactsEntryCursorAdapter contactsEntryCursorAdapter;
 
@@ -135,6 +137,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Toast.makeText(MainActivity.this, "on Swiped ", Toast.LENGTH_SHORT).show();
                 //Remove swiped item from list and notify the RecyclerView
                 final int position = viewHolder.getAdapterPosition();
+                if (mcursor != null && mcursor.moveToPosition(position)){
+                    DeleteContactEntry deleteContactEntry = new DeleteContactEntry(MainActivity.this, contactsEntryCursorAdapter);
+                    deleteContactEntry.execute(mcursor.getLong(0));
+                }
+
                 //adapter.notifyItemRemoved(position);
             }
         };
@@ -174,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param permission the permission contains the name of permission that user allowed
      */
     public void showPermissionGranted(String permission) {
-        Timber.d(getTypeFromPermission(permission) + " permission granted");
         if(Utilities.checkPermission(this)){
             getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
         }
@@ -295,11 +301,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()){
             case CONTACTS_ENTRY_LOADER:
-                contactsEntryCursorAdapter.changeCursor(data);
+                mcursor = data;
+                contactsEntryCursorAdapter.changeCursor(mcursor);
+
                 if (contactsEntryCursorAdapter.getItemCount() > 0){
                     emptytextView.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                 } else {
+                    // notifyDataSetChanged is to resolve the issue coming when all the items are deleted from the
+                    // recycler view(https://stackoverflow.com/questions/35653439/recycler-view-inconsistency-detected-invalid-view-holder-adapter-positionviewh)
+                    
+                    contactsEntryCursorAdapter.notifyDataSetChanged();
                     emptytextView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
                 }
