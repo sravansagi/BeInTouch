@@ -95,8 +95,22 @@ public class BeInTouchContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not yet implemented");
-        //return 0;
+        final SQLiteDatabase db = beInTouchDbHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int rowsDeleted = 0;
+        switch (match){
+            case CONTACT_ENTRIES:
+                rowsDeleted = db.delete(ContactsEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                if (rowsDeleted != 0){
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return rowsDeleted;
     }
 
     @Override
