@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,7 @@ public class ContactDetailFragment extends Fragment {
     PieChart pieChart;
     TextView contactDetailEmptyView;
     DetailContactHistoryAdapter detailContactHistoryAdapter;
+    LinearLayout linearLayout;
 
 
     public ContactDetailFragment() {
@@ -134,6 +136,7 @@ public class ContactDetailFragment extends Fragment {
                 pieChart = (PieChart) rootView.findViewById(R.id.piechart);
                 contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
+                linearLayout = (LinearLayout) rootView.findViewById(R.id.contact_detail_linearlayour);
                 if(Utilities.checkPermission(getContext())){
                     RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
                     retrieveCallLogsforSelectedContact.execute(beInTouchContact);
@@ -251,7 +254,7 @@ public class ContactDetailFragment extends Fragment {
             contactDetailEmptyView.setVisibility(View.GONE);
             pieChart.setVisibility(View.VISIBLE);
             this.drawCallInitiationGraph(pieChart);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            linearLayout.setVisibility(View.VISIBLE);
             layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
             detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
@@ -259,7 +262,7 @@ public class ContactDetailFragment extends Fragment {
             mRecyclerView.setAdapter(detailContactHistoryAdapter);
         } else {
             contactDetailEmptyView.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
             pieChart.setVisibility(View.GONE);
         }
     }

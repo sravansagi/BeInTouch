@@ -134,15 +134,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                Toast.makeText(MainActivity.this, "on Swiped ", Toast.LENGTH_SHORT).show();
                 //Remove swiped item from list and notify the RecyclerView
                 final int position = viewHolder.getAdapterPosition();
                 if (mcursor != null && mcursor.moveToPosition(position)){
                     DeleteContactEntry deleteContactEntry = new DeleteContactEntry(MainActivity.this, contactsEntryCursorAdapter);
                     deleteContactEntry.execute(mcursor.getLong(0));
                 }
-
-                //adapter.notifyItemRemoved(position);
             }
         };
 
