@@ -15,6 +15,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int CONTACTS_ENTRY_LOADER = 2001;
     private static final int CALL_LOG_LOADER = 2002;
 
+    private Parcelable mLayoutManagerSavedState;
 
     private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
             BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
@@ -78,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey("LAYOUTPOSITION")){
+            mLayoutManagerSavedState = savedInstanceState.getParcelable("LAYOUTPOSITION");
+        }
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -311,6 +316,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                   //  emptytextView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
                 }
+
+                if(mRecyclerView.getVisibility() == View.VISIBLE
+                        && mLayoutManagerSavedState != null
+                        && layoutManager != null){
+                    layoutManager.onRestoreInstanceState(mLayoutManagerSavedState);
+                    mLayoutManagerSavedState = null;
+                }
                 break;
             case CALL_LOG_LOADER:
                 UpdateContactLastInteraction updateContactLastInteraction = new UpdateContactLastInteraction(this);
@@ -342,5 +354,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(contactsEntryCursorAdapter != null){
+            outState.putParcelable("LAYOUTPOSITION", mRecyclerView.getLayoutManager().onSaveInstanceState());
+        }
+        super.onSaveInstanceState(outState);
     }
 }
