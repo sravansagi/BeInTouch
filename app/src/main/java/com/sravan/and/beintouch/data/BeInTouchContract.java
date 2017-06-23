@@ -4,7 +4,6 @@ package com.sravan.and.beintouch.data;
  * Created by Sravan on 6/10/2017.
  */
 
-import android.content.ContentProvider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 

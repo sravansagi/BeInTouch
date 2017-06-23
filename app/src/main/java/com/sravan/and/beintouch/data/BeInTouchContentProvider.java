@@ -3,14 +3,14 @@ package com.sravan.and.beintouch.data;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 /**
  * Created by Sravan on 6/11/2017.

@@ -11,7 +11,9 @@ import android.widget.Toast;
 
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.utility.Utilities;
+
 import timber.log.Timber;
+
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 /**

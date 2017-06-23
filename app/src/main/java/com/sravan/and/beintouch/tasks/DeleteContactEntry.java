@@ -3,7 +3,7 @@ package com.sravan.and.beintouch.tasks;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
+import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapterRecycler;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 
 /**
@@ -13,11 +13,11 @@ import com.sravan.and.beintouch.data.BeInTouchContract;
 public class DeleteContactEntry extends AsyncTask<Long,Void,Void> {
 
     Context mContext;
-    ContactsEntryCursorAdapter contactsEntryCursorAdapter;
+    ContactsEntryCursorAdapterRecycler contactsEntryCursorAdapterRecycler;
 
-    public DeleteContactEntry(Context mContext, ContactsEntryCursorAdapter contactsEntryCursorAdapter) {
+    public DeleteContactEntry(Context mContext, ContactsEntryCursorAdapterRecycler contactsEntryCursorAdapterRecycler) {
         this.mContext = mContext;
-        this.contactsEntryCursorAdapter = contactsEntryCursorAdapter;
+        this.contactsEntryCursorAdapterRecycler = contactsEntryCursorAdapterRecycler;
     }
 
     private static final String SELECTION_CONTACT_ENTRY = BeInTouchContract.ContactsEntry._ID + " = ?";

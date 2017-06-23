@@ -3,6 +3,7 @@ package com.sravan.and.beintouch.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 /**

@@ -22,10 +22,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.karumi.dexter.Dexter;
@@ -35,10 +36,10 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapter;
+import com.sravan.and.beintouch.adapters.ContactsEntryCursorAdapterRecycler;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
-import com.sravan.and.beintouch.tasks.DeleteContactEntry;
 import com.sravan.and.beintouch.tasks.UpdateContactLastInteraction;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
@@ -46,7 +47,7 @@ import com.sravan.and.beintouch.utility.Utilities;
 
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,ContactsEntryCursorAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,ContactsEntryCursorAdapterRecycler.OnItemClickListener {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACTS_ENTRY_LOADER = 2001;
@@ -69,10 +70,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             CallLog.Calls.CACHED_NAME};
 
     private MultiplePermissionsListener allPermissionsListener;
-    RecyclerView mRecyclerView;
-    TextView emptytextView;
+    ListView mListView;
+    //TextView emptytextView;
     Cursor mcursor;
     RecyclerView.LayoutManager layoutManager;
+    ContactsEntryCursorAdapterRecycler contactsEntryCursorAdapterRecycler;
     ContactsEntryCursorAdapter contactsEntryCursorAdapter;
 
     @Override
@@ -117,14 +119,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-        emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
-        mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
+        //emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
+        mListView = (ListView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
-        mRecyclerView.setAdapter(contactsEntryCursorAdapter);
+        //mListView.setLayoutManager(layoutManager);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(this, null);
+        //contactsEntryCursorAdapterRecycler = new ContactsEntryCursorAdapterRecycler(null,BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
+        mListView.setAdapter(contactsEntryCursorAdapter);
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(contactsEntryCursorAdapter != null){
+                    BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
+                    Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, beInTouchContact);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        /*ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -137,14 +152,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //Remove swiped item from list and notify the RecyclerView
                 final int position = viewHolder.getAdapterPosition();
                 if (mcursor != null && mcursor.moveToPosition(position)){
-                    DeleteContactEntry deleteContactEntry = new DeleteContactEntry(MainActivity.this, contactsEntryCursorAdapter);
+                    DeleteContactEntry deleteContactEntry = new DeleteContactEntry(MainActivity.this, contactsEntryCursorAdapterRecycler);
                     deleteContactEntry.execute(mcursor.getLong(0));
                 }
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        itemTouchHelper.attachToRecyclerView(mListView);
+        */
         getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
         if(Utilities.checkPermission(this)){
             getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
@@ -300,17 +316,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case CONTACTS_ENTRY_LOADER:
                 mcursor = data;
                 contactsEntryCursorAdapter.changeCursor(mcursor);
-
-                if (contactsEntryCursorAdapter.getItemCount() > 0){
-                    emptytextView.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
+                Timber.d("List View Count" + contactsEntryCursorAdapter.getCount() + "");
+                if (contactsEntryCursorAdapter.getCount() > 0){
+                   // emptytextView.setVisibility(View.GONE);
+                    mListView.setVisibility(View.VISIBLE);
                 } else {
                     // notifyDataSetChanged is to resolve the issue coming when all the items are deleted from the
                     // recycler view(https://stackoverflow.com/questions/35653439/recycler-view-inconsistency-detected-invalid-view-holder-adapter-positionviewh)
-                    
-                    contactsEntryCursorAdapter.notifyDataSetChanged();
-                    emptytextView.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.GONE);
+                    //contactsEntryCursorAdapterRecycler.notifyDataSetChanged();
+                   // emptytextView.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
                 }
                 break;
             case CALL_LOG_LOADER:
@@ -334,9 +349,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public void onItemClick(int position) {
-        if (contactsEntryCursorAdapter != null){
-            //Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
-            BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
+        if (contactsEntryCursorAdapterRecycler != null){
+            //Uri uri = contactsEntryCursorAdapterRecycler.getContactLookupUri(position);
+            BeInTouchContact beInTouchContact = contactsEntryCursorAdapterRecycler.createContactfromCursor(position);
             //Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class)
                     .putExtra(Intent.EXTRA_TEXT, beInTouchContact);

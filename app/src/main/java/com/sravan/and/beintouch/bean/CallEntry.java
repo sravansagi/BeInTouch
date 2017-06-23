@@ -2,8 +2,6 @@ package com.sravan.and.beintouch.bean;
 
 import android.provider.CallLog;
 
-import java.util.ArrayList;
-
 /**
  * Created by HP on 6/21/2017.
  */

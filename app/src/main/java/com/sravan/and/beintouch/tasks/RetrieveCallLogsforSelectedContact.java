@@ -1,6 +1,5 @@
 package com.sravan.and.beintouch.tasks;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.CallLog;
