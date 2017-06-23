@@ -52,7 +52,7 @@ public class DetailContactHistoryAdapter extends
         holder.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(callEntries
                                 .get(position)
                                 .getDate()));
-        Glide.with(context).load(R.drawable.ic_contact_thumbnail)
+        Glide.with(context).load(R.drawable.ic_call_log)
                     .into(holder.imageView);
     }
 

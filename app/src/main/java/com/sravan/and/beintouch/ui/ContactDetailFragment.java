@@ -59,7 +59,7 @@ public class ContactDetailFragment extends Fragment {
 
     ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
     public static final int[] MATERIAL_COLORS = {
-            rgb("#03A9F4"), rgb("#ff64c2f4")};
+            rgb("#0288D1"), rgb("#64C2F4")};
 
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
             CallLog.Calls.NUMBER,
@@ -168,32 +168,6 @@ public class ContactDetailFragment extends Fragment {
         return rootView;
     }
 
-    @SuppressWarnings("MissingPermission")
-    private void processCallLogData() {
-        String phoneNumberwithoutSpaces = beInTouchContact.getPhoneNumber().replaceAll(" ", "");
-        String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
-        Cursor callLogofContact = getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
-                CALLLOG_CONTACT_PROJECTION,
-                SELECTION_CALLLOG_CONTACT,
-                new String[]{"%" + phoneNumberwithoutEncoding +"%"},
-                CallLog.Calls.DEFAULT_SORT_ORDER);
-        for (callLogofContact.moveToFirst(); !callLogofContact.isAfterLast(); callLogofContact.moveToNext()) {
-            CallEntry callEntry = new CallEntry();
-            callEntry.setIncoming(callLogofContact.getInt(2));
-            callEntry.setDate(callLogofContact.getLong(3));
-            callEntry.setDuration(callLogofContact.getLong(4));
-            callEntries.add(callEntry);
-        }
-
-        for (CallEntry entry:callEntries) {
-            if(entry.getIncoming()){
-                incomingDuration = incomingDuration + entry.getDuration();
-            } else {
-                outgoingDuration = outgoingDuration + entry.getDuration();
-            }
-        }
-    }
-
 
     /**
      * The drawCallInitiationGraph method creates a pie chart showing the incoming and outgoing calls of a selected contact
@@ -216,7 +190,7 @@ public class ContactDetailFragment extends Fragment {
         entries.add(new PieEntry(incomingDuration, beInTouchContact.getName()));
         entries.add(new PieEntry(outgoingDuration, YOU));
         PieDataSet set = new PieDataSet(entries, CALLINITIATION_PIECHART_DESC);
-        set.setColors(ColorTemplate.MATERIAL_COLORS);
+        set.setColors(MATERIAL_COLORS);
 
 
         PieData data = new PieData(set);
