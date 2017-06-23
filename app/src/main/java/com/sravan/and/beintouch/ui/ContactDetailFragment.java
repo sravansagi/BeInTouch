@@ -61,14 +61,6 @@ public class ContactDetailFragment extends Fragment {
     public static final int[] MATERIAL_COLORS = {
             rgb("#0288D1"), rgb("#64C2F4")};
 
-    private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
-            CallLog.Calls.NUMBER,
-            CallLog.Calls.TYPE,
-            CallLog.Calls.DATE,
-            CallLog.Calls.DURATION};
-
-    private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
-
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager layoutManager;
     PieChart pieChart;
@@ -132,10 +124,10 @@ public class ContactDetailFragment extends Fragment {
                             .load(beInTouchContact.getContactThumbnailPhotoID())
                             .into(contactPhotoView);
                 }
-
                 pieChart = (PieChart) rootView.findViewById(R.id.piechart);
                 contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
+                mRecyclerView.setNestedScrollingEnabled(false);
                 linearLayout = (LinearLayout) rootView.findViewById(R.id.contact_detail_linearlayour);
                 if(Utilities.checkPermission(getContext())){
                     RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
