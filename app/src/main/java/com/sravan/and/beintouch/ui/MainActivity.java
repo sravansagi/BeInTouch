@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-        //emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
+        emptytextView = (TextView) findViewById(R.id.contacts_entry_empty_textview);
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -306,14 +306,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 mcursor = data;
                 contactsEntryCursorAdapter.changeCursor(mcursor);
                 if (contactsEntryCursorAdapter.getItemCount() > 0){
-                  //  emptytextView.setVisibility(View.GONE);
+                    emptytextView.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                 } else {
                     // notifyDataSetChanged is to resolve the issue coming when all the items are deleted from the
                     // recycler view(https://stackoverflow.com/questions/35653439/recycler-view-inconsistency-detected-invalid-view-holder-adapter-positionviewh)
 
                     contactsEntryCursorAdapter.notifyDataSetChanged();
-                  //  emptytextView.setVisibility(View.VISIBLE);
+                    emptytextView.setVisibility(View.VISIBLE);
                     mRecyclerView.setVisibility(View.GONE);
                 }
 
@@ -328,7 +328,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 UpdateContactLastInteraction updateContactLastInteraction = new UpdateContactLastInteraction(this);
                 updateContactLastInteraction.execute();
                 break;
-
         }
     }
 

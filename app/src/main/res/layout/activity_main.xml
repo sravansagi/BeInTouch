@@ -31,11 +31,27 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/contacts_entry_recycleview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts_entry_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/contacts_entry_empty_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="72dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:layout_marginStart="16dp"
+            android:text="@string/contactsentryemptyview"
+            tools:text="@string/contactsentryemptyview"/>
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
