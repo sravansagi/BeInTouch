@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -43,6 +44,7 @@ import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.tasks.UpdateContactLastInteraction;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
+import com.sravan.and.beintouch.utility.SwipeDetector;
 import com.sravan.and.beintouch.utility.Utilities;
 
 import timber.log.Timber;
@@ -126,16 +128,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(this, null);
         //contactsEntryCursorAdapterRecycler = new ContactsEntryCursorAdapterRecycler(null,BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
         mListView.setAdapter(contactsEntryCursorAdapter);
-
+        final SwipeDetector swipeDetector = new SwipeDetector();
+        mListView.setOnTouchListener(swipeDetector);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(contactsEntryCursorAdapter != null){
-                    BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
-                    Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class)
-                            .putExtra(Intent.EXTRA_TEXT, beInTouchContact);
-                    startActivity(intent);
+
+                if(swipeDetector.swipeDetected()) {
+                    if(swipeDetector.getAction() == SwipeDetector.Action.RL
+                            || swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                        Timber.d("Swipe Action");
+                    }
+                } else {
+                    if(contactsEntryCursorAdapter != null){
+                        BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
+                        Intent intent = new Intent(MainActivity.this, ContactDetailActivity.class)
+                                .putExtra(Intent.EXTRA_TEXT, beInTouchContact);
+                        startActivity(intent);
+                    }
                 }
+
+
             }
         });
 
