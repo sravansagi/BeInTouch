@@ -31,44 +31,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contacts_entry_recycleview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/contacts_entry_recycleview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_margin="0dp">
-            </android.support.v7.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/contacts_entry_empty_textview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                tools:text="Sample"
-                android:gravity="center"
-                android:text="@string/contactsentryemptyview"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="72dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp" />
-        </android.support.constraint.ConstraintLayout>
-
-
-    </android.support.v4.widget.NestedScrollView>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
