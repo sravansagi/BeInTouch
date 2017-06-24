@@ -40,6 +40,7 @@ import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.tasks.AddContactEntry;
 import com.sravan.and.beintouch.tasks.DeleteContactEntry;
+import com.sravan.and.beintouch.tasks.NotificationTask;
 import com.sravan.and.beintouch.tasks.UpdateContactLastInteraction;
 import com.sravan.and.beintouch.utility.FontCache;
 import com.sravan.and.beintouch.utility.SampleMultiplePermissionListener;
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            NotificationTask notificationTask = new NotificationTask(this);
+            notificationTask.execute();
             return true;
         }
 
