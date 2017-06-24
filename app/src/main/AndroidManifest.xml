@@ -38,6 +38,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sravan.and.beintouch.ui.MainActivity" />
         </activity>
+        
+        <service android:name="com.sravan.and.beintouch.utility.NotificationFirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

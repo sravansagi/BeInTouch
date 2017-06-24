@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         Timber.e("There was an error: " + error.toString());
                     }
                 }).check();
-
+        Utilities.scheduleNotification(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            NotificationTask notificationTask = new NotificationTask(this);
-            notificationTask.execute();
+            //NotificationTask notificationTask = new NotificationTask(this);
+            //notificationTask.execute();
             return true;
         }
 
