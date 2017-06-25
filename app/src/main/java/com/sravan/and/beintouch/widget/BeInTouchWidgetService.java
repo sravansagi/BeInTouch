@@ -3,14 +3,30 @@ package com.sravan.and.beintouch.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Binder;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
+
+import java.io.IOException;
 
 import timber.log.Timber;
 
@@ -96,20 +112,34 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         }
         mCursor.moveToPosition(position);
         RemoteViews views = new RemoteViews(mContext.getPackageName(),
-                R.layout.contacts_list_item);
+                R.layout.widget_list_item);
         BeInTouchContact beInTouchContact = createContactfromCursor(mCursor);
-        views.setTextViewText(R.id.contactname, beInTouchContact.getName());
-        views.setTextViewText(R.id.contactlastinteraction, BeInTouchContact.getLastInteraction(beInTouchContact.getLastcontacted()));
-        views.setImageViewResource(R.id.contactavatar, R.drawable.ic_contact_thumbnail);
+        views.setTextViewText(R.id.widget_contactname, beInTouchContact.getName());
+        views.setTextViewText(R.id.widget_contactlastinteraction, BeInTouchContact.getLastInteraction(beInTouchContact.getLastcontacted()));
+        if (beInTouchContact.getContactThumbnailPhotoID() != null
+                && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(),Uri.parse(beInTouchContact.getContactThumbnailPhotoID()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null){
+                views.setImageViewBitmap(R.id.widget_contactavatar, getCircleBitmap(bitmap));
+            }
+            //views.setImageViewUri(R.id.widget_contactavatar, Uri.parse(beInTouchContact.getContactThumbnailPhotoID()));
+        } else {
+            views.setImageViewResource(R.id.widget_contactavatar, R.drawable.ic_contact_thumbnail);
+        }
         final Intent fillIntent = new Intent();
         fillIntent.putExtra(Intent.EXTRA_TEXT, beInTouchContact);
-        views.setOnClickFillInIntent(R.id.contacts_entry_list, fillIntent);
+        views.setOnClickFillInIntent(R.id.widget_entry_list, fillIntent);
         return views;
     }
 
     @Override
     public RemoteViews getLoadingView() {
-        return new RemoteViews(mContext.getPackageName(), R.layout.contacts_list_item);
+        return null;
     }
 
     @Override
@@ -140,6 +170,24 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
             return beInTouchContact;
         }
         return null;
+    }
+
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final int color = Color.RED;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawOval(rectF, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        bitmap.recycle();
+        return output;
     }
 
 }
