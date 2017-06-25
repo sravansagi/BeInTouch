@@ -29,6 +29,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.DexterError;
@@ -155,6 +158,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if(Utilities.checkPermission(this)){
             getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
         }
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("6C21B0458E3BA016232450AFD157E6C0")
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override

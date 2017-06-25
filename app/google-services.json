@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "202544742017",
+    "firebase_url": "https://capstone-94e7f.firebaseio.com",
+    "project_id": "capstone-94e7f",
+    "storage_bucket": "capstone-94e7f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:202544742017:android:e139754c8b6cfb25",
+        "android_client_info": {
+          "package_name": "com.sravan.and.beintouch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "202544742017-vb632b0173tebvp7umnjd1voal38c3lg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6kmfj_3JeImLf9F9kgHZY336qT0dgJ5A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
