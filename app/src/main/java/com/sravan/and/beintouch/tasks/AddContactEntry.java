@@ -1,5 +1,7 @@
 package com.sravan.and.beintouch.tasks;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +11,11 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
+import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.utility.Utilities;
+import com.sravan.and.beintouch.widget.BeInTouchWidget;
+
 import timber.log.Timber;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
@@ -121,6 +126,10 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             ContentValues contactCV = beInTouchContact.createCVforContact();
             Uri returnUri = context.getContentResolver().insert(ContactsEntry.CONTENT_URI, contactCV);
             if (returnUri != null && returnUri.toString().length() > 0){
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                        new ComponentName(context, BeInTouchWidget.class));
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
                 return "The Value has been added";
             } else {
                 return null;

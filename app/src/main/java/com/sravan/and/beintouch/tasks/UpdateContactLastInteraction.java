@@ -1,14 +1,18 @@
 package com.sravan.and.beintouch.tasks;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.CallLog;
 
+import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 import com.sravan.and.beintouch.utility.Utilities;
+import com.sravan.and.beintouch.widget.BeInTouchWidget;
 
 import java.util.HashMap;
 
@@ -64,6 +68,7 @@ public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
         }
         for (String contactNumber: contactEntryList.keySet()) {
             long lastContact = 0;
+            int rowsUpdated = 0;
             if(Utilities.checkPermission(context)){
                 String phoneNumberwithoutSpaces = contactNumber.replaceAll(" ", "");
                 String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
@@ -81,9 +86,16 @@ public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
                 if (lastContact > 0 & lastContact > contactEntryList.get(contactNumber).getLastcontacted()){
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, lastContact);
-                    int rowsUpdated = context.getContentResolver().update(BeInTouchContract.ContactsEntry.CONTENT_URI, contentValues,
+                    int rowsUpdatedSelectedContact = context.getContentResolver().update(BeInTouchContract.ContactsEntry.CONTENT_URI, contentValues,
                             SELECTION_CONTACT_ENTRY, new String[]{contactEntryList.get(contactNumber).get_id()+""});
-                    Timber.d("Number of rows Updated" + rowsUpdated);
+                    rowsUpdated = rowsUpdated + rowsUpdatedSelectedContact;
+                }
+                Timber.d("Number of rows Updated" + rowsUpdated);
+                if(rowsUpdated > 0){
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                            new ComponentName(context, BeInTouchWidget.class));
+                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
                 }
             }
         }
