@@ -1,12 +1,15 @@
-package com.sravan.and.beintouch;
+package com.sravan.and.beintouch.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
+import com.sravan.and.beintouch.R;
+import com.sravan.and.beintouch.ui.ContactDetailActivity;
 import com.sravan.and.beintouch.ui.MainActivity;
 
 /**
@@ -17,15 +20,21 @@ public class BeInTouchWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.be_in_touch_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
-        Intent beIntent = new Intent(context, MainActivity.class);
-        views.setOnClickPendingIntent(R.id.appwidget_text, PendingIntent.getActivity(context,
-                0,beIntent,0));
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+        views.setOnClickPendingIntent(R.id.widget_title,pendingIntent);
 
-        // Instruct the widget manager to update the widget
+        views.setRemoteAdapter(R.id.widget_list,
+                new Intent(context, BeInTouchWidgetService.class));
+        Intent clickIntentTemplate = new Intent(context, ContactDetailActivity.class);
+        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(clickIntentTemplate)
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);
+        views.setEmptyView(R.id.widget_list, R.id.widget_emptyview);
+// Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -35,6 +44,7 @@ public class BeInTouchWidget extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+        //super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override

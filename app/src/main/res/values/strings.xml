@@ -10,6 +10,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contactdetailemptyview">You haven\'t interacted with the selected contact. Its a nice time to start</string>
     <string name="history">History</string>
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 </resources>

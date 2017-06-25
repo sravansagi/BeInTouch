@@ -47,7 +47,7 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".BeInTouchWidget">
+        <receiver android:name=".widget.BeInTouchWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -56,6 +56,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/be_in_touch_widget_info" />
         </receiver>
+
+        <service android:name=".widget.BeInTouchWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
