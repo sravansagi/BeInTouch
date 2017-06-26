@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /**
+                /*
                  * The FAB is to as a contact picker which will send an intent and wait for the other apps to
                  * handle the contact picker request. The result of the picker is read in the onActivityResult call back
                  */
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
                 PackageManager packageManager = getPackageManager();
                 if (contactPickerIntent.resolveActivity(packageManager) != null) {
+                    Utilities.logFirebaseEvent(MainActivity.this, getResources().getString(R.string.add_contact_event));
                     startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
                 } else {
                     Toast.makeText(getApplicationContext(),

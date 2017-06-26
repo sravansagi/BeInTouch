@@ -145,6 +145,7 @@ public class ContactDetailFragment extends Fragment {
                     Intent callContactIntent =  new Intent(Intent.ACTION_VIEW);
                     PackageManager packageManager = getContext().getPackageManager();
                     if (callContactIntent.resolveActivity(packageManager) != null) {
+                        Utilities.logFirebaseEvent(getContext(), getResources().getString(R.string.call_contact_event));
                         callContactIntent.setData(Uri.parse("tel:"+ beInTouchContact.getPhoneNumber()));
                         startActivity(callContactIntent);
                     } else {

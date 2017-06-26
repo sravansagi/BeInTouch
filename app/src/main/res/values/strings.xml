@@ -11,5 +11,7 @@
     <string name="contactdetailemptyview">You haven\'t interacted with the selected contact. Its a nice time to start</string>
     <string name="history">History</string>
     <string name="add_widget">Add widget</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="add_contact_event" translatable="false">add_contact</string>
+    <string name="call_contact_event" translatable="false">call_contact</string>
 </resources>
