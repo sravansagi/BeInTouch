@@ -5,6 +5,10 @@
     <string name="contactsentryemptyview">There are no contacts added.
         Please add the contacts to be in touch with them.In case if you want to delete the contact swipe on the contact
         either to left or right</string>
+
+    <string name="widgetcontactsentryemptyview">There are no contacts added.
+        Open the app and add the contacts to be in touch with them</string>
+
     <string name="title_activity_contact_detail">ContactDetailActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="contactdetailemptyview">You haven\'t interacted with the selected contact. Its a nice time to start</string>
