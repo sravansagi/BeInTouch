@@ -60,6 +60,8 @@
 
         <service android:name=".widget.BeInTouchWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <receiver android:name=".utility.NotificationActionReceiver"/>
     </application>
 
 </manifest>
