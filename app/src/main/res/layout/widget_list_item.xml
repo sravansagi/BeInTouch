@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/widget_contactavatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_width="@dimen/w_h_forthy_dp"
+        android:layout_height="@dimen/w_h_forthy_dp"
+        android:contentDescription="@string/contact_photo_thumbnail"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
+        android:layout_marginBottom="@dimen/margin_eight_dp"
+        android:layout_marginTop="@dimen/margin_eight_dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,22 +24,22 @@
             android:id="@+id/widget_contactname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/margin_sixteen_dp"
+            android:layout_marginEnd="@dimen/margin_eight_dp"
             tools:text="Google"
             android:textStyle="bold"
             android:textAlignment="viewStart"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="@dimen/margin_eight_dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:id="@+id/widget_contactlastinteraction"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="@dimen/margin_sixteen_dp"
+            android:layout_marginTop="@dimen/margin_six_dp"
             android:textAlignment="viewStart"
             tools:text="last interacted always"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="@dimen/margin_eight_dp" />
     </LinearLayout>
 
 </LinearLayout>

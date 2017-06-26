@@ -56,6 +56,9 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
             callEntry.setDuration(callLogofContact.getLong(4));
             callEntries.add(callEntry);
         }
+        if (callLogofContact!=null){
+            callLogofContact.close();
+        }
 
         return callEntries;
     }

@@ -9,14 +9,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contactavatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="@dimen/w_h_forthy_dp"
+        android:layout_height="@dimen/w_h_forthy_dp"
+        android:contentDescription="@string/contact_photo_thumbnail"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/margin_eight_dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_eight_dp"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -24,14 +25,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
+        android:layout_marginEnd="@dimen/margin_eight_dp"
         tools:text="Google"
         android:textStyle="bold"
         android:textAlignment="viewStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_eight_dp"
         app:layout_constraintHorizontal_bias="0.0" />
     
     <TextView
@@ -39,13 +40,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
+        android:layout_marginTop="@dimen/margin_six_dp"
         android:textAlignment="viewStart"
         tools:text="last interacted always"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contactname"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="@dimen/margin_eight_dp" />
 
 </android.support.constraint.ConstraintLayout>

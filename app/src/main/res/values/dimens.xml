@@ -5,8 +5,16 @@
     <dimen name="fab_dimen">56dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
-    <dimen name="card_margin">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="app_bar_elevation">4dp</dimen>
+    <dimen name="margin_sixteen_dp">16dp</dimen>
+    <dimen name="margin_seventytwo_dp">72dp</dimen>
+    <dimen name="margin_eighty_dp">80dp</dimen>
+    <dimen name="textsize_thirtytwo_sp">32sp</dimen>
+    <dimen name="w_h_forthy_dp">40dp</dimen>
+    <dimen name="margin_eight_dp">8dp</dimen>
+    <dimen name="margin_six_dp">6dp</dimen>
+    <dimen name="w_h_twofifty_dp">250dp</dimen>
 
 </resources>
