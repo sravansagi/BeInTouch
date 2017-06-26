@@ -61,7 +61,7 @@ public class NotificationFirebaseJobService extends JobService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setContentTitle("Talk with " + contactName)
-                                .setSmallIcon(R.drawable.ic_call_24dp)
+                                .setSmallIcon(R.drawable.ic_notification)
                                 .setContentText("Have you both spoke recently? Talk now")
                                 .addAction(callContactAction)
                                 .setAutoCancel(true);
