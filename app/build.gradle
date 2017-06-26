@@ -40,5 +40,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
     compile 'com.firebase:firebase-jobdispatcher:0.6.0'
     compile 'com.google.firebase:firebase-ads:11.0.1'
-
+    compile 'com.google.firebase:firebase-core:11.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
