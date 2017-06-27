@@ -50,23 +50,11 @@ import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 public class ContactDetailFragment extends Fragment {
 
     BeInTouchContact beInTouchContact;
-
-    private static final String YOU = "You";
-    private static final String CALLINITIATION_PIECHART_DESC= "Call Initiation";
-
-    long incomingDuration = 0;
-    long outgoingDuration = 0;
-
     ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
-    public static final int[] MATERIAL_COLORS = {
-            rgb("#0288D1"), rgb("#64C2F4")};
-
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager layoutManager;
-    PieChart pieChart;
     TextView contactDetailEmptyView;
     DetailContactHistoryAdapter detailContactHistoryAdapter;
-    LinearLayout linearLayout;
 
 
     public ContactDetailFragment() {
@@ -110,11 +98,10 @@ public class ContactDetailFragment extends Fragment {
                             .load(beInTouchContact.getContactThumbnailPhotoID())
                             .into(contactPhotoView);
                 }
-                //pieChart = (PieChart) rootView.findViewById(R.id.piechart);
-                //contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
+                contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
-                //mRecyclerView.setNestedScrollingEnabled(false);
-                //linearLayout = (LinearLayout) rootView.findViewById(R.id.contact_detail_linearlayour);
+                layoutManager = new LinearLayoutManager(getContext());
+                mRecyclerView.setLayoutManager(layoutManager);
                 if(Utilities.checkPermission(getContext())){
                     RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
                     retrieveCallLogsforSelectedContact.execute(beInTouchContact);
@@ -146,82 +133,18 @@ public class ContactDetailFragment extends Fragment {
         return rootView;
     }
 
-
-    /**
-     * The drawCallInitiationGraph method creates a pie chart showing the incoming and outgoing calls of a selected contact
-     *
-     * @param pieChart
-     */
-    private void drawCallInitiationGraph(PieChart pieChart){
-
-
-        Description des = pieChart.getDescription();
-        des.setEnabled(false);
-        pieChart.setRotationAngle(0);
-        pieChart.setRotationEnabled(false);
-        pieChart.setDrawEntryLabels(false);
-        pieChart.setHighlightPerTapEnabled(true);
-
-        // Creating datas for the pie chart
-
-        List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(incomingDuration, beInTouchContact.getName()));
-        entries.add(new PieEntry(outgoingDuration, YOU));
-        PieDataSet set = new PieDataSet(entries, CALLINITIATION_PIECHART_DESC);
-        set.setColors(MATERIAL_COLORS);
-
-
-        PieData data = new PieData(set);
-        data.setDrawValues(false);
-        pieChart.setData(data);
-
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleColor(Color.WHITE);
-        pieChart.setHoleRadius(60);
-
-        // Updating the pirchart legend
-
-        Legend l = pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(false);
-        l.setXEntrySpace(0f);
-        l.setYEntrySpace(0f);
-        l.setYOffset(0f);
-        pieChart.invalidate();
-    }
-
     public void onCall(ArrayList<CallEntry> callEntries) {
 
-        /*for (CallEntry entry:callEntries) {
-            if(entry.getIncoming()){
-                incomingDuration = incomingDuration + entry.getDuration();
-            } else {
-                outgoingDuration = outgoingDuration + entry.getDuration();
-            }
-        }*/
-
-        layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
         detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
                 callEntries, beInTouchContact.getName());
         mRecyclerView.setAdapter(detailContactHistoryAdapter);
 
-       /* if(incomingDuration > 0 || outgoingDuration > 0){
-            //contactDetailEmptyView.setVisibility(View.GONE);
-            //pieChart.setVisibility(View.VISIBLE);
-            //this.drawCallInitiationGraph(pieChart);
-            //linearLayout.setVisibility(View.VISIBLE);
-            layoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(layoutManager);
-            detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
-                    callEntries, beInTouchContact.getName());
-            mRecyclerView.setAdapter(detailContactHistoryAdapter);
-        } else {
+        if(detailContactHistoryAdapter.getItemCount() == 0){
             contactDetailEmptyView.setVisibility(View.VISIBLE);
-            linearLayout.setVisibility(View.GONE);
-            pieChart.setVisibility(View.GONE);
-        }*/
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            contactDetailEmptyView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

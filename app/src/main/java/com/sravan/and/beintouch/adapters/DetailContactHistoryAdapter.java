@@ -39,11 +39,11 @@ public class DetailContactHistoryAdapter extends
     String contactName;
     private static long incomingCalls;
     private static long outgoingCalls;
+    private static final String YOU = "You";
+    private static final String CALLINITIATION_PIECHART_DESC= "Call Initiation";
 
     public static final int[] MATERIAL_COLORS = {
             rgb("#0288D1"), rgb("#64C2F4")};
-
-
 
     private static final int GRAPH = 1;
     private static final int HISTORY = 2;
@@ -160,11 +160,10 @@ public class DetailContactHistoryAdapter extends
         pieChart.setRotationEnabled(false);
         pieChart.setDrawEntryLabels(false);
         pieChart.setHighlightPerTapEnabled(true);
-        // Creating datas for the pie chart
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(incomingCalls, contactName));
-        entries.add(new PieEntry(outgoingCalls, "YOU"));
-        PieDataSet set = new PieDataSet(entries, "CallInitiation");
+        entries.add(new PieEntry(outgoingCalls, YOU));
+        PieDataSet set = new PieDataSet(entries, CALLINITIATION_PIECHART_DESC);
         set.setColors(MATERIAL_COLORS);
         PieData data = new PieData(set);
         data.setDrawValues(false);
@@ -172,7 +171,6 @@ public class DetailContactHistoryAdapter extends
         pieChart.setDrawHoleEnabled(true);
         pieChart.setHoleColor(Color.WHITE);
         pieChart.setHoleRadius(60);
-        // Updating the pirchart legend
         Legend l = pieChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
