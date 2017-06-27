@@ -43,72 +43,26 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contact_detail_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/piechart"
-                android:layout_width="@dimen/w_h_twofifty_dp"
-                android:layout_height="@dimen/w_h_twofifty_dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/margin_eight_dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="@dimen/margin_eight_dp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/margin_eight_dp">
-            </com.github.mikephil.charting.charts.PieChart>
-
-            <TextView
-                android:id="@+id/contacts_detail_empty_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Sample"
-                android:layout_gravity="center"
-                android:text="@string/contactdetailemptyview"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/margin_seventytwo_dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginEnd="@dimen/margin_sixteen_dp"
-                android:layout_marginStart="@dimen/margin_sixteen_dp" />
-
-            <LinearLayout
-                android:id="@+id/contact_detail_linearlayour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/piechart"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/history"
-                    android:layout_marginBottom="@dimen/margin_eight_dp"
-                    android:layout_marginStart="@dimen/margin_sixteen_dp"
-                    android:textAppearance="@android:style/TextAppearance.Large"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/contact_detail_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-
-
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/contacts_entry_empty_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_seventytwo_dp"
+            android:layout_marginEnd="@dimen/margin_sixteen_dp"
+            android:layout_marginStart="@dimen/margin_sixteen_dp"
+            android:text="@string/contactdetailemptyview"
+            tools:text="@string/contactdetailemptyview"/>
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

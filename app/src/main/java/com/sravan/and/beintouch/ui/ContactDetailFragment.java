@@ -110,15 +110,14 @@ public class ContactDetailFragment extends Fragment {
                             .load(beInTouchContact.getContactThumbnailPhotoID())
                             .into(contactPhotoView);
                 }
-                pieChart = (PieChart) rootView.findViewById(R.id.piechart);
-                contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
+                //pieChart = (PieChart) rootView.findViewById(R.id.piechart);
+                //contactDetailEmptyView = (TextView) rootView.findViewById(R.id.contacts_detail_empty_textview);
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
-                mRecyclerView.setNestedScrollingEnabled(false);
-                linearLayout = (LinearLayout) rootView.findViewById(R.id.contact_detail_linearlayour);
+                //mRecyclerView.setNestedScrollingEnabled(false);
+                //linearLayout = (LinearLayout) rootView.findViewById(R.id.contact_detail_linearlayour);
                 if(Utilities.checkPermission(getContext())){
                     RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
                     retrieveCallLogsforSelectedContact.execute(beInTouchContact);
-
                 }
             }
         }
@@ -195,19 +194,25 @@ public class ContactDetailFragment extends Fragment {
 
     public void onCall(ArrayList<CallEntry> callEntries) {
 
-        for (CallEntry entry:callEntries) {
+        /*for (CallEntry entry:callEntries) {
             if(entry.getIncoming()){
                 incomingDuration = incomingDuration + entry.getDuration();
             } else {
                 outgoingDuration = outgoingDuration + entry.getDuration();
             }
-        }
+        }*/
 
-        if(incomingDuration > 0 || outgoingDuration > 0){
-            contactDetailEmptyView.setVisibility(View.GONE);
-            pieChart.setVisibility(View.VISIBLE);
-            this.drawCallInitiationGraph(pieChart);
-            linearLayout.setVisibility(View.VISIBLE);
+        layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
+                callEntries, beInTouchContact.getName());
+        mRecyclerView.setAdapter(detailContactHistoryAdapter);
+
+       /* if(incomingDuration > 0 || outgoingDuration > 0){
+            //contactDetailEmptyView.setVisibility(View.GONE);
+            //pieChart.setVisibility(View.VISIBLE);
+            //this.drawCallInitiationGraph(pieChart);
+            //linearLayout.setVisibility(View.VISIBLE);
             layoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(layoutManager);
             detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
@@ -217,6 +222,6 @@ public class ContactDetailFragment extends Fragment {
             contactDetailEmptyView.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
             pieChart.setVisibility(View.GONE);
-        }
+        }*/
     }
 }
