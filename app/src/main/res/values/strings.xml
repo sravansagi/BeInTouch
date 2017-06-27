@@ -20,5 +20,5 @@
     <string name="add_contact_content_desciption">Add contact</string>
     <string name="contact_photo_thumbnail">contact photo thumbnail</string>
     <string name="contact_photo">contact photo</string>
-    <string name="graph_content_description">The graph view showing contact interaction</string>
+    <string name="graph_content_description">The graph view showing interaction with contact</string>
 </resources>

@@ -107,6 +107,7 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
         }
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setContentDescription("Call " + beInTouchContact.getName());
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
