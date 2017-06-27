@@ -90,7 +90,6 @@ public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
                             SELECTION_CONTACT_ENTRY, new String[]{contactEntryList.get(contactNumber).get_id()+""});
                     rowsUpdated = rowsUpdated + rowsUpdatedSelectedContact;
                 }
-                Timber.d("Number of rows Updated" + rowsUpdated);
                 if(rowsUpdated > 0){
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                     int[] appWidgetIds = appWidgetManager.getAppWidgetIds(

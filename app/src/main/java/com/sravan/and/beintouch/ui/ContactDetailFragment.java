@@ -119,11 +119,11 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
                         callContactIntent.setData(Uri.parse("tel:"+ beInTouchContact.getPhoneNumber()));
                         startActivity(callContactIntent);
                     } else {
-                        Toast.makeText(getContext(),"There is not application to make a phone call",
+                        Toast.makeText(getContext(),getResources().getString(R.string.no_application_to_make_phone_call),
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(),"There is some problem in opening the selected contact. Please try again",
+                    Toast.makeText(getContext(),getResources().getString(R.string.problem_opening_selected_contact),
                             Toast.LENGTH_LONG).show();
                 }
             }

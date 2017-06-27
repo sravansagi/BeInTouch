@@ -115,7 +115,7 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
                 R.layout.widget_list_item);
         BeInTouchContact beInTouchContact = createContactfromCursor(mCursor);
         views.setTextViewText(R.id.widget_contactname, beInTouchContact.getName());
-        views.setTextViewText(R.id.widget_contactlastinteraction, BeInTouchContact.getLastInteraction(beInTouchContact.getLastcontacted()));
+        views.setTextViewText(R.id.widget_contactlastinteraction, BeInTouchContact.getLastInteraction(mContext,beInTouchContact.getLastcontacted()));
         if (beInTouchContact.getContactThumbnailPhotoID() != null
                 && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
             Bitmap bitmap = null;

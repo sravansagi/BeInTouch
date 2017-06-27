@@ -85,7 +85,7 @@ public class ContactsEntryCursorAdapter extends CursorRecyclerViewAdapter<Contac
         String picture = cursor.getString(THUMBNAIL_PHOTO_COLUMN);
         viewHolder.contactName.setText(name);
         viewHolder.contactLastInteracted.
-                setText(BeInTouchContact.getLastInteraction(cursor.getLong(LAST_CONTACTED)));
+                setText(BeInTouchContact.getLastInteraction(context,cursor.getLong(LAST_CONTACTED)));
         if(picture!= null && picture.length() > 0){
             Glide.with(context).load(picture)
                     .into(viewHolder.imageView);

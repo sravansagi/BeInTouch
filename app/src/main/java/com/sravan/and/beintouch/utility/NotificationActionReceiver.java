@@ -31,13 +31,12 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 callContactIntent.setData(Uri.parse("tel:"+ phoneNumber));
                 context.startActivity(callContactIntent);
             } else {
-                Toast.makeText(context,"There is not application to make a phone call",
+                Toast.makeText(context,context.getResources().getString(R.string.no_application_to_make_phone_call),
                         Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(context,"Please check if contact contains a phone number or some error occured",
+            Toast.makeText(context,context.getResources().getString(R.string.problem_opening_selected_contact),
                     Toast.LENGTH_LONG).show();
         }
-        //Toast.makeText(context, "Notification Closed", Toast.LENGTH_SHORT).show();
     }
 }

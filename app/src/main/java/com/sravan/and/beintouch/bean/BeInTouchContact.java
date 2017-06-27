@@ -5,9 +5,11 @@ package com.sravan.and.beintouch.bean;
  */
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.data.BeInTouchContract;
 
 import java.util.Date;
@@ -26,8 +28,6 @@ public class BeInTouchContact implements Parcelable {
     private String contactThumbnailPhotoID;
     private long lastcontacted;
     private String photoID;
-
-    private static final String NEVER_INTERACTED = "No Interaction";
 
     public BeInTouchContact() {
     }
@@ -113,9 +113,9 @@ public class BeInTouchContact implements Parcelable {
         return values;
     }
 
-    public static String getLastInteraction(long lastcontacted){
+    public static String getLastInteraction(Context context,long lastcontacted){
         if (lastcontacted == 0){
-            return NEVER_INTERACTED;
+            return context.getResources().getString(R.string.contact_no_interaction);
         }
         Date currentDate = new Date();
         long currentTime = currentDate.getTime();
@@ -124,17 +124,17 @@ public class BeInTouchContact implements Parcelable {
         // Since the time is stored in epoch format, it is converted to sec
         long diffSec = diffTime/1000;
         if(diffSec < 3600){
-            return  "Last Interacted " + diffSec/60 + " min(s) ago";
+            return  context.getResources().getString(R.string.contact_entry_mins_ago, diffSec/60);
         } else if (diffSec < 86400){
-            return  "Last Interacted " + (diffSec/60)/60 + " hour(s) ago" ;
+            return  context.getResources().getString(R.string.contact_entry_hours_ago, (diffSec/60)/60);
         } else {
-            return  "Last Interacted " + ((diffSec/60)/60)/24 + " day(s) ago" ;
+            return  context.getResources().getString(R.string.contact_entry_days_ago, ((diffSec/60)/60)/24) ;
         }
     }
 
-    public static String getLastInteractedHistory(long lastcontacted){
+    public static String getLastInteractedHistory(Context context, long lastcontacted){
         if (lastcontacted == 0){
-            return NEVER_INTERACTED;
+            return context.getResources().getString(R.string.contact_no_interaction);
         }
         Date currentDate = new Date();
         long currentTime = currentDate.getTime();
@@ -143,11 +143,11 @@ public class BeInTouchContact implements Parcelable {
         // Since the time is stored in epoch format, it is converted to sec
         long diffSec = diffTime/1000;
         if(diffSec < 3600){
-            return  diffSec/60 + " min(s) ago";
+            return  context.getResources().getString(R.string.contact_mins_ago, diffSec/60);
         } else if (diffSec < 86400){
-            return  (diffSec/60)/60 + " hour(s) ago" ;
+            return  context.getResources().getString(R.string.contact_hours_ago, (diffSec/60)/60) ;
         } else {
-            return  ((diffSec/60)/60)/24 + " day(s) ago" ;
+            return context.getResources().getString(R.string.contact_days_ago, ((diffSec/60)/60)/24);
         }
     }
 

@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "There is not application to access the contacts",
+                            getResources().getString(R.string.no_application_to_access_contacts),
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
         Toast.makeText(this,
-                getTypeFromPermission(permission) + " permission is denied. Closing the App. Please provide permissions next time",
+                getResources().getString(R.string.permission_denied,getTypeFromPermission(permission)),
                 Toast.LENGTH_LONG).show();
         finish();
     }
@@ -225,16 +225,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String permissionMessage = "" ;
         switch (permissionIdentifier){
             case 1:
-                permissionMessage = "We need permission to read call log for the app";
+                permissionMessage = getResources().getString(R.string.permission_rationale_call);
                 break;
             case 2:
-                permissionMessage = "We need permissions to read contacts for the app";
+                permissionMessage = getResources().getString(R.string.permission_rationale_contacts);
                 break;
             case 3:
-                permissionMessage = "We need permission for call and contacts for the app";
+                permissionMessage = getResources().getString(R.string.permission_rationale_call_contacts);
                 break;
             default:
-                permissionMessage = "We need the required permissions for the app.Please provide";
+                permissionMessage = getResources().getString(R.string.permission_rationale_default);
 
         }
         new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.permission_dialog_title))

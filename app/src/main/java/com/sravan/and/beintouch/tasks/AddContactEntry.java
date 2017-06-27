@@ -101,8 +101,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 if (cursorContact != null && cursorContact.moveToFirst()) {
                     cursor.close();
                     cursorContact.close();
-                    // Todo(1) Add the following string to android strings resource
-                    return "The Contact is already added to the list";
+                    return context.getResources().getString(R.string.contact_already_added);
                 }
 
                 // The below query is to check if the user has contacted the selected contact
@@ -120,7 +119,6 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                         callLogofContact.close();
                     }
                 }
-                Timber.d("The Selected Contact is :" + beInTouchContact.getName() + " : " + beInTouchContact.getPhoneNumber());
                 cursor.close();
             }
             ContentValues contactCV = beInTouchContact.createCVforContact();
@@ -130,7 +128,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                         new ComponentName(context, BeInTouchWidget.class));
                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-                return "The Value has been added";
+                return context.getResources().getString(R.string.contact_added);
             } else {
                 return null;
             }

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchContact, Void, ArrayList<CallEntry>> {
 
-    //ContactDetailFragment contactDetailFragment;
     Context mContext;
     private ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
     private FragmentCallback mFragmentCallback;
@@ -72,6 +71,5 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
     @Override
     protected void onPostExecute(ArrayList<CallEntry> callEntries) {
         mFragmentCallback.onTaskDone(callEntries);
-        //contactDetailFragment.onCall(callEntries);
     }
 }

@@ -56,13 +56,13 @@ public class NotificationFirebaseJobService extends JobService {
                 buttonIntent.putExtra(Intent.EXTRA_TEXT,phoneNumber);
                 PendingIntent btPendingIntent = PendingIntent.getBroadcast(this, 0, buttonIntent,0);
                 NotificationCompat.Action callContactAction = new NotificationCompat.Action(R.drawable.ic_call_24dp,
-                        "Call",
+                        this.getResources().getString(R.string.notification_action),
                         btPendingIntent);
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                                .setContentTitle("Talk with " + contactName)
+                                .setContentTitle(this.getResources().getString(R.string.notification_contact_name,contactName))
                                 .setSmallIcon(R.drawable.ic_notification)
-                                .setContentText("Have you both spoke recently? Talk now")
+                                .setContentText(this.getResources().getString(R.string.notification_text))
                                 .addAction(callContactAction)
                                 .setAutoCancel(true);
                 // Creates an explicit intent for an Activity in your app

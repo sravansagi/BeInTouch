@@ -21,4 +21,28 @@
     <string name="contact_photo_thumbnail">contact photo thumbnail</string>
     <string name="contact_photo">contact photo</string>
     <string name="graph_content_description">The graph view showing interaction with contact</string>
+
+    <string name="contact_no_interaction">No Interaction</string>
+    <string name="contact_days_ago">%1$d day(s) ago</string>
+    <string name="contact_hours_ago">%1$d hour(s) ago</string>
+    <string name="contact_mins_ago">%1$d min(s) ago</string>
+    <string name="contact_entry_days_ago">Last Interacted %1$d day(s) ago</string>
+    <string name="contact_entry_hours_ago">Last Interacted %1$d hour(s) ago</string>
+    <string name="contact_entry_mins_ago">Last Interacted %1$d min(s) ago</string>
+    <string name="contact_added">The Contact has been added</string>
+    <string name="contact_already_added">The Contact is already added to the list</string>
+
+
+    <string name="permission_rationale_call">We need permission to read call log for the app</string>
+    <string name="permission_rationale_contacts">We need permissions to read contacts for the app</string>
+    <string name="permission_rationale_call_contacts">We need permission for call log and contacts for the app</string>
+    <string name="permission_rationale_default">We need the required permissions for the app.Please provide</string>
+    <string name="permission_denied">%1$s permission is denied. Closing the App. Please provide permissions next time</string>
+    <string name="no_application_to_access_contacts">There is not application to access the contacts</string>
+    <string name="no_application_to_make_phone_call">There is not application to make a phone call</string>
+    <string name="problem_opening_selected_contact">There is some problem in opening the selected contact. Please try again</string>
+    <string name="notification_text">Have you both spoke recently? Talk now</string>
+    <string name="notification_contact_name">Talk with %1$s</string>
+    <string name="notification_action">Call</string>
+
 </resources>

@@ -92,7 +92,7 @@ public class DetailContactHistoryAdapter extends
                 ViewHolderHistory viewHolderHistory = (ViewHolderHistory) holder;
                 String name = contactName;
                 viewHolderHistory.contactName.setText(name);
-                viewHolderHistory.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(callEntries
+                viewHolderHistory.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(context,callEntries
                         .get(position-1)
                         .getDate()));
                 Glide.with(context).load(R.drawable.ic_call_log)
