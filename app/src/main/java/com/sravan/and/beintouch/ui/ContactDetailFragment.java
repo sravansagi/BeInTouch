@@ -47,7 +47,7 @@ import java.util.List;
 import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 
 
-public class ContactDetailFragment extends Fragment {
+public class ContactDetailFragment extends Fragment implements RetrieveCallLogsforSelectedContact.FragmentCallback{
 
     BeInTouchContact beInTouchContact;
     ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
@@ -103,7 +103,7 @@ public class ContactDetailFragment extends Fragment {
                 layoutManager = new LinearLayoutManager(getContext());
                 mRecyclerView.setLayoutManager(layoutManager);
                 if(Utilities.checkPermission(getContext())){
-                    RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(this);
+                    RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(getContext(), this);
                     retrieveCallLogsforSelectedContact.execute(beInTouchContact);
                 }
             }
@@ -135,7 +135,7 @@ public class ContactDetailFragment extends Fragment {
 
     public void onCall(ArrayList<CallEntry> callEntries) {
 
-        detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
+       /* detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
                 callEntries, beInTouchContact.getName());
         mRecyclerView.setAdapter(detailContactHistoryAdapter);
 
@@ -145,6 +145,23 @@ public class ContactDetailFragment extends Fragment {
         } else {
             contactDetailEmptyView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
+        }*/
+    }
+
+    @Override
+    public void onTaskDone(ArrayList<CallEntry> callEntries) {
+        {
+            detailContactHistoryAdapter = new DetailContactHistoryAdapter(getContext(),
+                    callEntries, beInTouchContact.getName());
+            mRecyclerView.setAdapter(detailContactHistoryAdapter);
+
+            if (detailContactHistoryAdapter.getItemCount() == 0) {
+                contactDetailEmptyView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            } else {
+                contactDetailEmptyView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

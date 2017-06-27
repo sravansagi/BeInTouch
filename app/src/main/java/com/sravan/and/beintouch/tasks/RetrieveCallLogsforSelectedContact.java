@@ -17,11 +17,17 @@ import java.util.ArrayList;
 
 public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchContact, Void, ArrayList<CallEntry>> {
 
-    ContactDetailFragment contactDetailFragment;
+    //ContactDetailFragment contactDetailFragment;
+    Context mContext;
     private ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
+    private FragmentCallback mFragmentCallback;
+    public RetrieveCallLogsforSelectedContact(Context context, FragmentCallback fragmentCallback) {
+        this.mContext = context;
+        this.mFragmentCallback = fragmentCallback;
+    }
 
-    public RetrieveCallLogsforSelectedContact(ContactDetailFragment contactDetailFragment) {
-        this.contactDetailFragment = contactDetailFragment;
+    public interface FragmentCallback {
+        public void onTaskDone(ArrayList<CallEntry> callEntries);
     }
 
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
@@ -44,7 +50,7 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
 
         String phoneNumberwithoutSpaces = beInTouchContact.getPhoneNumber().replaceAll(" ", "");
         String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
-        Cursor callLogofContact = contactDetailFragment.getContext().getContentResolver().query(CallLog.Calls.CONTENT_URI,
+        Cursor callLogofContact = mContext.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                 CALLLOG_CONTACT_PROJECTION,
                 SELECTION_CALLLOG_CONTACT,
                 new String[]{"%" + phoneNumberwithoutEncoding +"%"},
@@ -65,6 +71,7 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
 
     @Override
     protected void onPostExecute(ArrayList<CallEntry> callEntries) {
-        contactDetailFragment.onCall(callEntries);
+        mFragmentCallback.onTaskDone(callEntries);
+        //contactDetailFragment.onCall(callEntries);
     }
 }
