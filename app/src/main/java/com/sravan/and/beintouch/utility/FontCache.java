@@ -19,17 +19,17 @@ public class FontCache {
 
     /**
      * get method is used to return the custom font by caching the font in the hashmap
-     * @param name The name of the font
+     *
+     * @param name    The name of the font
      * @param context The associated application context
      * @return Typeface of the requested font
      */
     public static Typeface get(String name, Context context) {
         Typeface typeface = fontCache.get(name);
-        if(typeface == null) {
+        if (typeface == null) {
             try {
                 typeface = Typeface.createFromAsset(context.getAssets(), name);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
             fontCache.put(name, typeface);

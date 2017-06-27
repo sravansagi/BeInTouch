@@ -2,11 +2,10 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/be_in_touch_widget"
     android:minHeight="120dp"
+    android:minResizeHeight="120dp"
+    android:minResizeWidth="240dp"
     android:minWidth="240dp"
     android:previewImage="@drawable/example_appwidget_preview"
     android:resizeMode="horizontal|vertical"
-    android:minResizeHeight="120dp"
-    android:minResizeWidth="240dp"
     android:updatePeriodMillis="1800000"
-    android:widgetCategory="home_screen">
-</appwidget-provider>
+    android:widgetCategory="home_screen"></appwidget-provider>

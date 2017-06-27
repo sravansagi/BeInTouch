@@ -124,6 +124,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     /**
      * Processes two cursors, old/existing cursor and a new cursor, returning a list of indexes who's
      * records were inserted, deleted, or changed
+     *
      * @param oldCursor
      * @param newCursor
      * @return
@@ -157,6 +158,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     /**
      * Returns a list of indexes of records that were deleted
      * May also return whether or not ALL records were inserted
+     *
      * @param oldCursor
      * @param newCursor
      * @return
@@ -182,7 +184,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
                             oldRecordFound = true;
                             break;
                         }
-                    } while(newCursor.moveToNext());
+                    } while (newCursor.moveToNext());
 
                     if (!oldRecordFound) {
                         changes.put(cursorIndex, REMOVED);
@@ -204,6 +206,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     /**
      * Returns an array of indexes who's records were newly inserted or changed
      * Will also return whether or not all the records were inserted or removed
+     *
      * @param oldCursor
      * @param newCursor
      * @return
@@ -261,7 +264,6 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
 
     /**
-     *
      * @param newCursor
      * @param changes
      * @return

@@ -3,7 +3,6 @@ package com.sravan.and.beintouch.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,19 +33,17 @@ import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 public class DetailContactHistoryAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int[] MATERIAL_COLORS = {
+            rgb("#0288D1"), rgb("#64C2F4")};
+    private static final String YOU = "You";
+    private static final String CALLINITIATION_PIECHART_DESC = "Call Initiation";
+    private static final int GRAPH = 1;
+    private static final int HISTORY = 2;
+    private static long incomingCalls;
+    private static long outgoingCalls;
     Context context;
     ArrayList<CallEntry> callEntries;
     String contactName;
-    private static long incomingCalls;
-    private static long outgoingCalls;
-    private static final String YOU = "You";
-    private static final String CALLINITIATION_PIECHART_DESC= "Call Initiation";
-
-    public static final int[] MATERIAL_COLORS = {
-            rgb("#0288D1"), rgb("#64C2F4")};
-
-    private static final int GRAPH = 1;
-    private static final int HISTORY = 2;
 
 
     public DetailContactHistoryAdapter(Context context, ArrayList<CallEntry> callEntries, String contactName) {
@@ -57,6 +54,16 @@ public class DetailContactHistoryAdapter extends
         outgoingCalls = 0;
     }
 
+    private static void updateIncomingOutgoingCalls(ArrayList<CallEntry> callEntries) {
+        for (CallEntry entry : callEntries) {
+            if (entry.getIncoming()) {
+                incomingCalls = incomingCalls + entry.getDuration();
+            } else {
+                outgoingCalls = outgoingCalls + entry.getDuration();
+            }
+        }
+    }
+
     public ArrayList<CallEntry> getCallEntries() {
         return callEntries;
     }
@@ -65,7 +72,7 @@ public class DetailContactHistoryAdapter extends
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh = null;
         View itemView;
-        switch (viewType){
+        switch (viewType) {
             case GRAPH:
                 itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.contacts_list_graph, parent, false);
@@ -82,7 +89,7 @@ public class DetailContactHistoryAdapter extends
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        switch (holder.getItemViewType()){
+        switch (holder.getItemViewType()) {
             case GRAPH:
                 ViewHolderGraph viewHolderGraph = (ViewHolderGraph) holder;
                 updateIncomingOutgoingCalls(callEntries);
@@ -92,8 +99,8 @@ public class DetailContactHistoryAdapter extends
                 ViewHolderHistory viewHolderHistory = (ViewHolderHistory) holder;
                 String name = contactName;
                 viewHolderHistory.contactName.setText(name);
-                viewHolderHistory.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(context,callEntries
-                        .get(position-1)
+                viewHolderHistory.contactLastInteracted.setText(BeInTouchContact.getLastInteractedHistory(context, callEntries
+                        .get(position - 1)
                         .getDate()));
                 Glide.with(context).load(R.drawable.ic_call_log)
                         .into(viewHolderHistory.imageView);
@@ -103,57 +110,23 @@ public class DetailContactHistoryAdapter extends
 
     @Override
     public int getItemCount() {
-        if (callEntries != null && callEntries.size() > 0){
+        if (callEntries != null && callEntries.size() > 0) {
             return callEntries.size() + 1;
-        }
-        else {
+        } else {
             return 0;
-        }
-    }
-
-
-    public class ViewHolderHistory extends RecyclerView.ViewHolder {
-        public TextView contactName;
-        public TextView contactLastInteracted;
-        public ImageView imageView;
-
-        public ViewHolderHistory(View itemView) {
-            super(itemView);
-            contactName = (TextView) itemView.findViewById(R.id.contactname);
-            contactLastInteracted = (TextView) itemView.findViewById(R.id.contactlastinteraction);
-            imageView = (ImageView) itemView.findViewById(R.id.contactavatar);
-        }
-    }
-
-    public class ViewHolderGraph extends RecyclerView.ViewHolder {
-        public PieChart pieChart;
-
-        public ViewHolderGraph(View itemView) {
-            super(itemView);
-            pieChart = (PieChart) itemView.findViewById(R.id.piechart);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0){
+        if (position == 0) {
             return GRAPH;
         } else {
             return HISTORY;
         }
     }
 
-    private static void updateIncomingOutgoingCalls(ArrayList<CallEntry> callEntries){
-        for (CallEntry entry: callEntries ) {
-            if(entry.getIncoming()){
-                incomingCalls  = incomingCalls + entry.getDuration();
-            } else {
-                outgoingCalls = outgoingCalls + entry.getDuration();
-            }
-        }
-    }
-
-    private void drawCallInitiationGraph(PieChart pieChart){
+    private void drawCallInitiationGraph(PieChart pieChart) {
         Description des = pieChart.getDescription();
         des.setEnabled(false);
         pieChart.setRotationAngle(0);
@@ -180,5 +153,27 @@ public class DetailContactHistoryAdapter extends
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
         pieChart.invalidate();
+    }
+
+    public class ViewHolderHistory extends RecyclerView.ViewHolder {
+        public TextView contactName;
+        public TextView contactLastInteracted;
+        public ImageView imageView;
+
+        public ViewHolderHistory(View itemView) {
+            super(itemView);
+            contactName = (TextView) itemView.findViewById(R.id.contactname);
+            contactLastInteracted = (TextView) itemView.findViewById(R.id.contactlastinteraction);
+            imageView = (ImageView) itemView.findViewById(R.id.contactavatar);
+        }
+    }
+
+    public class ViewHolderGraph extends RecyclerView.ViewHolder {
+        public PieChart pieChart;
+
+        public ViewHolderGraph(View itemView) {
+            super(itemView);
+            pieChart = (PieChart) itemView.findViewById(R.id.piechart);
+        }
     }
 }

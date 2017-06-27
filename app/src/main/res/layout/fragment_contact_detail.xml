@@ -18,12 +18,12 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:title="Contact Detail"
-            app:collapsedTitleGravity="start"
-            app:expandedTitleGravity="start|bottom"
             android:fitsSystemWindows="true"
+            app:collapsedTitleGravity="start"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:expandedTitleGravity="start|bottom"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="Contact Detail">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -47,21 +47,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contact_detail_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/contacts_detail_empty_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/margin_seventytwo_dp"
             android:layout_marginEnd="@dimen/margin_sixteen_dp"
             android:layout_marginStart="@dimen/margin_sixteen_dp"
+            android:layout_marginTop="@dimen/margin_seventytwo_dp"
+            android:gravity="center"
             android:text="@string/contactdetailemptyview"
-            tools:text="@string/contactdetailemptyview"/>
+            android:visibility="gone"
+            tools:text="@string/contactdetailemptyview" />
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -69,10 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
         android:autoMirrored="true"
+        android:tint="@android:color/white"
+        app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_call_24dp"
-        android:tint="@android:color/white"/>
+        app:srcCompat="@drawable/ic_call_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

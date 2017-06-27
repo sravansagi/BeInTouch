@@ -16,8 +16,6 @@ import com.sravan.and.beintouch.widget.BeInTouchWidget;
 
 import java.util.HashMap;
 
-import timber.log.Timber;
-
 /**
  * Created by HP on 6/20/2017.
  * This task updates the last interacted time of all the contains that have been added to the contacts entry table
@@ -27,10 +25,7 @@ import timber.log.Timber;
 
 public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
 
-    Context context;
-
     private static final String SORTORDER_DATE_DESC_LIMIT_1 = "date DESC LIMIT 1";
-
     private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
             BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
             BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
@@ -38,13 +33,12 @@ public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
             BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,
             BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED};
-
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
             CallLog.Calls.NUMBER,
             CallLog.Calls.DATE};
-
     private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
     private static final String SELECTION_CONTACT_ENTRY = BeInTouchContract.ContactsEntry._ID + " = ?";
+    Context context;
 
     public UpdateContactLastInteraction(Context mContext) {
         this.context = mContext;
@@ -60,37 +54,37 @@ public class UpdateContactLastInteraction extends AsyncTask<Void, Void, Void> {
                 null);
         HashMap<String, BeInTouchContact> contactEntryList = new HashMap<String, BeInTouchContact>();
         for (cursorContact.moveToFirst(); !cursorContact.isAfterLast(); cursorContact.moveToNext()) {
-            BeInTouchContact beInTouchContact = new BeInTouchContact(cursorContact.getLong(0),cursorContact.getLong(6));
+            BeInTouchContact beInTouchContact = new BeInTouchContact(cursorContact.getLong(0), cursorContact.getLong(6));
             contactEntryList.put(cursorContact.getString(2), beInTouchContact);
         }
-        if (cursorContact!=null){
+        if (cursorContact != null) {
             cursorContact.close();
         }
-        for (String contactNumber: contactEntryList.keySet()) {
+        for (String contactNumber : contactEntryList.keySet()) {
             long lastContact = 0;
             int rowsUpdated = 0;
-            if(Utilities.checkPermission(context)){
+            if (Utilities.checkPermission(context)) {
                 String phoneNumberwithoutSpaces = contactNumber.replaceAll(" ", "");
                 String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
                 Cursor callLogofContact = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                         CALLLOG_CONTACT_PROJECTION,
                         SELECTION_CALLLOG_CONTACT,
-                        new String[]{"%" + phoneNumberwithoutEncoding +"%"},
+                        new String[]{"%" + phoneNumberwithoutEncoding + "%"},
                         SORTORDER_DATE_DESC_LIMIT_1);
 
-                if (callLogofContact!= null && callLogofContact.moveToFirst()){
+                if (callLogofContact != null && callLogofContact.moveToFirst()) {
                     lastContact = callLogofContact.getLong(2);
                     callLogofContact.close();
                 }
 
-                if (lastContact > 0 & lastContact > contactEntryList.get(contactNumber).getLastcontacted()){
+                if (lastContact > 0 & lastContact > contactEntryList.get(contactNumber).getLastcontacted()) {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, lastContact);
                     int rowsUpdatedSelectedContact = context.getContentResolver().update(BeInTouchContract.ContactsEntry.CONTENT_URI, contentValues,
-                            SELECTION_CONTACT_ENTRY, new String[]{contactEntryList.get(contactNumber).get_id()+""});
+                            SELECTION_CONTACT_ENTRY, new String[]{contactEntryList.get(contactNumber).get_id() + ""});
                     rowsUpdated = rowsUpdated + rowsUpdatedSelectedContact;
                 }
-                if(rowsUpdated > 0){
+                if (rowsUpdated > 0) {
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                     int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                             new ComponentName(context, BeInTouchWidget.class));

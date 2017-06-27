@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,13 +14,10 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Binder;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.data.BeInTouchContract;
@@ -41,10 +37,7 @@ public class BeInTouchWidgetService extends RemoteViewsService {
     }
 }
 
-class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
-
-    Context mContext;
-    Cursor mCursor;
+class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
             BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
@@ -54,13 +47,15 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
             BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,
             BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
-    private static final int NAME_COLUMN  = 1;
+    private static final int NAME_COLUMN = 1;
     private static final int NUMBER_COLUMN = 2;
     private static final int CONTACTS_ID_COLUMN = 3;
     private static final int LOOKUP_COLUMN = 4;
     private static final int THUMBNAIL_PHOTO_COLUMN = 5;
     private static final int LAST_CONTACTED = 6;
     private static final int PHOTO_ID_COLUMN = 7;
+    Context mContext;
+    Cursor mCursor;
 
     public BeInTouchViewsFactory(Context applicationContext) {
         this.mContext = applicationContext;
@@ -88,7 +83,7 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public void onDestroy() {
-        if (mCursor != null){
+        if (mCursor != null) {
             mCursor.close();
         }
         mCursor = null;
@@ -115,16 +110,16 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
                 R.layout.widget_list_item);
         BeInTouchContact beInTouchContact = createContactfromCursor(mCursor);
         views.setTextViewText(R.id.widget_contactname, beInTouchContact.getName());
-        views.setTextViewText(R.id.widget_contactlastinteraction, BeInTouchContact.getLastInteraction(mContext,beInTouchContact.getLastcontacted()));
+        views.setTextViewText(R.id.widget_contactlastinteraction, BeInTouchContact.getLastInteraction(mContext, beInTouchContact.getLastcontacted()));
         if (beInTouchContact.getContactThumbnailPhotoID() != null
-                && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+                && beInTouchContact.getContactThumbnailPhotoID().length() > 0) {
             Bitmap bitmap = null;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(),Uri.parse(beInTouchContact.getContactThumbnailPhotoID()));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(beInTouchContact.getContactThumbnailPhotoID()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (bitmap != null){
+            if (bitmap != null) {
                 views.setImageViewBitmap(R.id.widget_contactavatar, getCircleBitmap(bitmap));
             }
             //views.setImageViewUri(R.id.widget_contactavatar, Uri.parse(beInTouchContact.getContactThumbnailPhotoID()));
@@ -157,7 +152,7 @@ class BeInTouchViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         return false;
     }
 
-    public BeInTouchContact createContactfromCursor(Cursor cursor){
+    public BeInTouchContact createContactfromCursor(Cursor cursor) {
         if (cursor != null) {
             BeInTouchContact beInTouchContact = new BeInTouchContact();
             beInTouchContact.setPhoneNumber(cursor.getString(NUMBER_COLUMN));

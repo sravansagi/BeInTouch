@@ -20,6 +20,17 @@ import java.util.Date;
  */
 public class BeInTouchContact implements Parcelable {
 
+    public static final Parcelable.Creator<BeInTouchContact> CREATOR = new Parcelable.Creator<BeInTouchContact>() {
+        @Override
+        public BeInTouchContact createFromParcel(Parcel source) {
+            return new BeInTouchContact(source);
+        }
+
+        @Override
+        public BeInTouchContact[] newArray(int size) {
+            return new BeInTouchContact[size];
+        }
+    };
     private long _id;
     private long contactID;
     private String lookup;
@@ -35,6 +46,55 @@ public class BeInTouchContact implements Parcelable {
     public BeInTouchContact(long _id, long lastcontacted) {
         this._id = _id;
         this.lastcontacted = lastcontacted;
+    }
+
+    protected BeInTouchContact(Parcel in) {
+        this._id = in.readLong();
+        this.contactID = in.readLong();
+        this.lookup = in.readString();
+        this.phoneNumber = in.readString();
+        this.name = in.readString();
+        this.contactThumbnailPhotoID = in.readString();
+        this.lastcontacted = in.readLong();
+        this.photoID = in.readString();
+    }
+
+    public static String getLastInteraction(Context context, long lastcontacted) {
+        if (lastcontacted == 0) {
+            return context.getResources().getString(R.string.contact_no_interaction);
+        }
+        Date currentDate = new Date();
+        long currentTime = currentDate.getTime();
+
+        long diffTime = currentTime - lastcontacted;
+        // Since the time is stored in epoch format, it is converted to sec
+        long diffSec = diffTime / 1000;
+        if (diffSec < 3600) {
+            return context.getResources().getString(R.string.contact_entry_mins_ago, diffSec / 60);
+        } else if (diffSec < 86400) {
+            return context.getResources().getString(R.string.contact_entry_hours_ago, (diffSec / 60) / 60);
+        } else {
+            return context.getResources().getString(R.string.contact_entry_days_ago, ((diffSec / 60) / 60) / 24);
+        }
+    }
+
+    public static String getLastInteractedHistory(Context context, long lastcontacted) {
+        if (lastcontacted == 0) {
+            return context.getResources().getString(R.string.contact_no_interaction);
+        }
+        Date currentDate = new Date();
+        long currentTime = currentDate.getTime();
+
+        long diffTime = currentTime - lastcontacted;
+        // Since the time is stored in epoch format, it is converted to sec
+        long diffSec = diffTime / 1000;
+        if (diffSec < 3600) {
+            return context.getResources().getString(R.string.contact_mins_ago, diffSec / 60);
+        } else if (diffSec < 86400) {
+            return context.getResources().getString(R.string.contact_hours_ago, (diffSec / 60) / 60);
+        } else {
+            return context.getResources().getString(R.string.contact_days_ago, ((diffSec / 60) / 60) / 24);
+        }
     }
 
     public long get_id() {
@@ -101,54 +161,16 @@ public class BeInTouchContact implements Parcelable {
         this.photoID = photoID;
     }
 
-    public ContentValues createCVforContact(){
+    public ContentValues createCVforContact() {
         ContentValues values = new ContentValues();
-        values.put(BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID,contactID);
-        values.put(BeInTouchContract.ContactsEntry.COLUMN_LOOKUP,lookup);
-        values.put(BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,name);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_CONTACT_ID, contactID);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_LOOKUP, lookup);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME, name);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID, contactThumbnailPhotoID);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_NUMBER, phoneNumber);
-        values.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,lastcontacted);
+        values.put(BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, lastcontacted);
         values.put(BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID, photoID);
         return values;
-    }
-
-    public static String getLastInteraction(Context context,long lastcontacted){
-        if (lastcontacted == 0){
-            return context.getResources().getString(R.string.contact_no_interaction);
-        }
-        Date currentDate = new Date();
-        long currentTime = currentDate.getTime();
-
-        long diffTime = currentTime - lastcontacted;
-        // Since the time is stored in epoch format, it is converted to sec
-        long diffSec = diffTime/1000;
-        if(diffSec < 3600){
-            return  context.getResources().getString(R.string.contact_entry_mins_ago, diffSec/60);
-        } else if (diffSec < 86400){
-            return  context.getResources().getString(R.string.contact_entry_hours_ago, (diffSec/60)/60);
-        } else {
-            return  context.getResources().getString(R.string.contact_entry_days_ago, ((diffSec/60)/60)/24) ;
-        }
-    }
-
-    public static String getLastInteractedHistory(Context context, long lastcontacted){
-        if (lastcontacted == 0){
-            return context.getResources().getString(R.string.contact_no_interaction);
-        }
-        Date currentDate = new Date();
-        long currentTime = currentDate.getTime();
-
-        long diffTime = currentTime - lastcontacted;
-        // Since the time is stored in epoch format, it is converted to sec
-        long diffSec = diffTime/1000;
-        if(diffSec < 3600){
-            return  context.getResources().getString(R.string.contact_mins_ago, diffSec/60);
-        } else if (diffSec < 86400){
-            return  context.getResources().getString(R.string.contact_hours_ago, (diffSec/60)/60) ;
-        } else {
-            return context.getResources().getString(R.string.contact_days_ago, ((diffSec/60)/60)/24);
-        }
     }
 
     @Override
@@ -167,27 +189,4 @@ public class BeInTouchContact implements Parcelable {
         dest.writeLong(this.lastcontacted);
         dest.writeString(this.photoID);
     }
-
-    protected BeInTouchContact(Parcel in) {
-        this._id = in.readLong();
-        this.contactID = in.readLong();
-        this.lookup = in.readString();
-        this.phoneNumber = in.readString();
-        this.name = in.readString();
-        this.contactThumbnailPhotoID = in.readString();
-        this.lastcontacted = in.readLong();
-        this.photoID = in.readString();
-    }
-
-    public static final Parcelable.Creator<BeInTouchContact> CREATOR = new Parcelable.Creator<BeInTouchContact>() {
-        @Override
-        public BeInTouchContact createFromParcel(Parcel source) {
-            return new BeInTouchContact(source);
-        }
-
-        @Override
-        public BeInTouchContact[] newArray(int size) {
-            return new BeInTouchContact[size];
-        }
-    };
 }

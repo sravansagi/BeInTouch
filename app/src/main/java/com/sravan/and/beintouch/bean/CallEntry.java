@@ -4,18 +4,33 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.CallLog;
 
-import java.util.ArrayList;
-
 /**
  * Created by HP on 6/21/2017.
  */
 
 public class CallEntry implements Parcelable {
+    public static final Parcelable.Creator<CallEntry> CREATOR = new Parcelable.Creator<CallEntry>() {
+        @Override
+        public CallEntry createFromParcel(Parcel source) {
+            return new CallEntry(source);
+        }
+
+        @Override
+        public CallEntry[] newArray(int size) {
+            return new CallEntry[size];
+        }
+    };
     private long date;
     private long duration;
     private boolean incoming;
 
     public CallEntry() {
+    }
+
+    protected CallEntry(Parcel in) {
+        this.date = in.readLong();
+        this.duration = in.readLong();
+        this.incoming = in.readByte() != 0;
     }
 
     public long getDate() {
@@ -38,15 +53,15 @@ public class CallEntry implements Parcelable {
         return incoming;
     }
 
-        public void setIncoming(int type) {
-        switch (type){
+    public void setIncoming(int type) {
+        switch (type) {
             case CallLog.Calls.OUTGOING_TYPE:
                 incoming = false;
                 break;
-            default: incoming = true;
+            default:
+                incoming = true;
         }
     }
-
 
     @Override
     public int describeContents() {
@@ -59,22 +74,4 @@ public class CallEntry implements Parcelable {
         dest.writeLong(this.duration);
         dest.writeByte(this.incoming ? (byte) 1 : (byte) 0);
     }
-
-    protected CallEntry(Parcel in) {
-        this.date = in.readLong();
-        this.duration = in.readLong();
-        this.incoming = in.readByte() != 0;
-    }
-
-    public static final Parcelable.Creator<CallEntry> CREATOR = new Parcelable.Creator<CallEntry>() {
-        @Override
-        public CallEntry createFromParcel(Parcel source) {
-            return new CallEntry(source);
-        }
-
-        @Override
-        public CallEntry[] newArray(int size) {
-            return new CallEntry[size];
-        }
-    };
 }

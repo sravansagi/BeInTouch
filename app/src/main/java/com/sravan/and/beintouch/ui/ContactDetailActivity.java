@@ -1,11 +1,7 @@
 package com.sravan.and.beintouch.ui;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.sravan.and.beintouch.R;
 
@@ -19,10 +15,10 @@ public class ContactDetailActivity extends AppCompatActivity {
         The below is to over come the calling of fragment onCreateView two times
         https://stackoverflow.com/a/19100627/4471346
          */
-        if(savedInstanceState != null)
+        if (savedInstanceState != null)
             return;
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.contact_detail_activity,new ContactDetailFragment())
+                .replace(R.id.contact_detail_activity, new ContactDetailFragment())
                 .commit();
-        }
+    }
 }

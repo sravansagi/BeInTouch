@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/widget_title"
@@ -25,17 +25,18 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ListView
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/contacts_list_item">
-        </ListView>
+            tools:listitem="@layout/contacts_list_item"></ListView>
+
         <TextView
             android:id="@+id/widget_emptyview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/widgetcontactsentryemptyview"/>
+            android:text="@string/widgetcontactsentryemptyview" />
     </FrameLayout>
 </LinearLayout>

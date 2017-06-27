@@ -14,8 +14,9 @@ import com.sravan.and.beintouch.widget.BeInTouchWidget;
  * Created by HP on 6/22/2017.
  */
 
-public class DeleteContactEntry extends AsyncTask<Long,Void,Void> {
+public class DeleteContactEntry extends AsyncTask<Long, Void, Void> {
 
+    private static final String SELECTION_CONTACT_ENTRY = BeInTouchContract.ContactsEntry._ID + " = ?";
     Context mContext;
     ContactsEntryCursorAdapter contactsEntryCursorAdapter;
 
@@ -24,23 +25,21 @@ public class DeleteContactEntry extends AsyncTask<Long,Void,Void> {
         this.contactsEntryCursorAdapter = contactsEntryCursorAdapter;
     }
 
-    private static final String SELECTION_CONTACT_ENTRY = BeInTouchContract.ContactsEntry._ID + " = ?";
-
     @Override
     protected Void doInBackground(Long... params) {
-        if (params.length == 0){
+        if (params.length == 0) {
             return null;
         }
         long contactIDDelete = params[0];
         int rowsDeleted = 0;
         rowsDeleted = mContext.getContentResolver().delete(BeInTouchContract.ContactsEntry.CONTENT_URI,
                 SELECTION_CONTACT_ENTRY, new String[]{contactIDDelete + ""});
-        if (rowsDeleted > 0){
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
-                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
-                        new ComponentName(mContext, BeInTouchWidget.class));
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-            }
+        if (rowsDeleted > 0) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(mContext, BeInTouchWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+        }
         return null;
     }
 }

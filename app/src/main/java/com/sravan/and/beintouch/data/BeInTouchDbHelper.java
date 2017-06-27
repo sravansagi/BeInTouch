@@ -3,6 +3,7 @@ package com.sravan.and.beintouch.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 /**
@@ -24,16 +25,16 @@ public class BeInTouchDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String CREATE_TABLE = "CREATE TABLE " + ContactsEntry.TABLE_NAME + " (" +
-                ContactsEntry._ID                   + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                ContactsEntry.COLUMN_CONTACT_ID     + " INTERGER NOT NULL, "+
-                ContactsEntry.COLUMN_LOOKUP         + " TEXT NOT NULL, "+
-                ContactsEntry.COLUMN_NUMBER         + " TEXT, " +
-                ContactsEntry.COLUMN_DISPLAYNAME    + " TEXT, " +
+                ContactsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                ContactsEntry.COLUMN_CONTACT_ID + " INTERGER NOT NULL, " +
+                ContactsEntry.COLUMN_LOOKUP + " TEXT NOT NULL, " +
+                ContactsEntry.COLUMN_NUMBER + " TEXT, " +
+                ContactsEntry.COLUMN_DISPLAYNAME + " TEXT, " +
                 ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID + " TEXT," +
                 ContactsEntry.COLUMN_PHOTO_ID + " TEXT," +
                 ContactsEntry.COLUMN_LAST_CONTACTED + " INTERGER DEFAULT 0);";
         sqLiteDatabase.execSQL(CREATE_TABLE);
-        }
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

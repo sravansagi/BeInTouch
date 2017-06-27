@@ -9,8 +9,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:elevation="@dimen/app_bar_elevation">
+        android:elevation="@dimen/app_bar_elevation"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -18,15 +18,16 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
+
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textAlignment="viewStart"
                 android:id="@+id/toolbar_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/toolbar_text"
                 android:textStyle="bold"
-                android:textColor="@android:color/white"
-                tools:text="BeInTouch"/>
+                tools:text="BeInTouch" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -35,30 +36,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_entry_recycleview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/contacts_entry_empty_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_seventytwo_dp"
             android:layout_marginEnd="@dimen/margin_sixteen_dp"
-            android:visibility="gone"
             android:layout_marginStart="@dimen/margin_sixteen_dp"
+            android:layout_marginTop="@dimen/margin_seventytwo_dp"
             android:text="@string/contactsentryemptyview"
-            tools:text="@string/contactsentryemptyview"/>
+            android:visibility="gone"
+            tools:text="@string/contactsentryemptyview" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
             android:layout_marginBottom="@dimen/margin_eighty_dp"
             app:adSize="BANNER"
-            android:layout_gravity="center|bottom"
             app:adUnitId="@string/banner_ad_unit_id"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -74,9 +77,9 @@
         android:layout_height="@dimen/fab_dimen"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:contentDescription="@string/add_contact_content_desciption"
         android:elevation="@dimen/fab_elevation"
         android:tint="@android:color/white"
-        android:contentDescription="@string/add_contact_content_desciption"
         android:translationZ="@dimen/fab_press_translation_z"
         app:srcCompat="@drawable/ic_person_add_black_24dp" />
 

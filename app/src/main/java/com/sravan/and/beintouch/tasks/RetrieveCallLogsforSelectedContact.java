@@ -7,7 +7,6 @@ import android.provider.CallLog;
 
 import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.bean.CallEntry;
-import com.sravan.and.beintouch.ui.ContactDetailFragment;
 
 import java.util.ArrayList;
 
@@ -17,31 +16,25 @@ import java.util.ArrayList;
 
 public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchContact, Void, ArrayList<CallEntry>> {
 
-    Context mContext;
-    private ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
-    private FragmentCallback mFragmentCallback;
-    public RetrieveCallLogsforSelectedContact(Context context, FragmentCallback fragmentCallback) {
-        this.mContext = context;
-        this.mFragmentCallback = fragmentCallback;
-    }
-
-    public interface FragmentCallback {
-        public void onTaskDone(ArrayList<CallEntry> callEntries);
-    }
-
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
             CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE,
             CallLog.Calls.DURATION};
-
     private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
+    Context mContext;
+    private ArrayList<CallEntry> callEntries = new ArrayList<CallEntry>();
+    private FragmentCallback mFragmentCallback;
 
+    public RetrieveCallLogsforSelectedContact(Context context, FragmentCallback fragmentCallback) {
+        this.mContext = context;
+        this.mFragmentCallback = fragmentCallback;
+    }
 
     @SuppressWarnings("MissingPermission")
     @Override
     protected ArrayList<CallEntry> doInBackground(BeInTouchContact... params) {
-        if (params.length == 0){
+        if (params.length == 0) {
             return null;
         }
 
@@ -52,7 +45,7 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
         Cursor callLogofContact = mContext.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                 CALLLOG_CONTACT_PROJECTION,
                 SELECTION_CALLLOG_CONTACT,
-                new String[]{"%" + phoneNumberwithoutEncoding +"%"},
+                new String[]{"%" + phoneNumberwithoutEncoding + "%"},
                 CallLog.Calls.DEFAULT_SORT_ORDER);
         for (callLogofContact.moveToFirst(); !callLogofContact.isAfterLast(); callLogofContact.moveToNext()) {
             CallEntry callEntry = new CallEntry();
@@ -61,7 +54,7 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
             callEntry.setDuration(callLogofContact.getLong(4));
             callEntries.add(callEntry);
         }
-        if (callLogofContact!=null){
+        if (callLogofContact != null) {
             callLogofContact.close();
         }
 
@@ -71,5 +64,9 @@ public class RetrieveCallLogsforSelectedContact extends AsyncTask<BeInTouchConta
     @Override
     protected void onPostExecute(ArrayList<CallEntry> callEntries) {
         mFragmentCallback.onTaskDone(callEntries);
+    }
+
+    public interface FragmentCallback {
+        public void onTaskDone(ArrayList<CallEntry> callEntries);
     }
 }

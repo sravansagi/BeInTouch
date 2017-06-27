@@ -58,10 +58,11 @@
                 android:resource="@xml/be_in_touch_widget_info" />
         </receiver>
 
-        <service android:name=".widget.BeInTouchWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service
+            android:name=".widget.BeInTouchWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver android:name=".utility.NotificationActionReceiver"/>
+        <receiver android:name=".utility.NotificationActionReceiver" />
     </application>
 
 </manifest>

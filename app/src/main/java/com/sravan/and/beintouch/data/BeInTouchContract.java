@@ -4,7 +4,6 @@ package com.sravan.and.beintouch.data;
  * Created by Sravan on 6/10/2017.
  */
 
-import android.content.ContentProvider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -23,7 +22,7 @@ public class BeInTouchContract {
 
     public static final String PATH_CONTACTSENTRY = "contactsentry";
 
-    public static final class ContactsEntry implements BaseColumns{
+    public static final class ContactsEntry implements BaseColumns {
 
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI
@@ -36,9 +35,9 @@ public class BeInTouchContract {
         public static final String COLUMN_LOOKUP = "lookup";
         public static final String COLUMN_NUMBER = "number";
         public static final String COLUMN_DISPLAYNAME = "displayname";
-        public static final String COLUMN_THUMBNAIL_PHOTO_ID ="thumbnailphotoid";
-        public static final String COLUMN_PHOTO_ID ="photoid";
-        public static final String COLUMN_LAST_CONTACTED ="lastcontact";
+        public static final String COLUMN_THUMBNAIL_PHOTO_ID = "thumbnailphotoid";
+        public static final String COLUMN_PHOTO_ID = "photoid";
+        public static final String COLUMN_LAST_CONTACTED = "lastcontact";
     }
 
 

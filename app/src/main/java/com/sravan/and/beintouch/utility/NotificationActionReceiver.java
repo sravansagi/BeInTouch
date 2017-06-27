@@ -23,19 +23,19 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(CONTACT_INTERACT);
         String phoneNumber = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (phoneNumber != null && phoneNumber.length()> 5 ){
-            Intent callContactIntent =  new Intent(Intent.ACTION_VIEW);
+        if (phoneNumber != null && phoneNumber.length() > 5) {
+            Intent callContactIntent = new Intent(Intent.ACTION_VIEW);
             PackageManager packageManager = context.getPackageManager();
             if (callContactIntent.resolveActivity(packageManager) != null) {
                 Utilities.logFirebaseEvent(context, context.getResources().getString(R.string.call_contact_from_notification_event));
-                callContactIntent.setData(Uri.parse("tel:"+ phoneNumber));
+                callContactIntent.setData(Uri.parse("tel:" + phoneNumber));
                 context.startActivity(callContactIntent);
             } else {
-                Toast.makeText(context,context.getResources().getString(R.string.no_application_to_make_phone_call),
+                Toast.makeText(context, context.getResources().getString(R.string.no_application_to_make_phone_call),
                         Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(context,context.getResources().getString(R.string.problem_opening_selected_contact),
+            Toast.makeText(context, context.getResources().getString(R.string.problem_opening_selected_contact),
                     Toast.LENGTH_LONG).show();
         }
     }

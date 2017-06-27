@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/contacts_entry_list"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contacts_entry_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,42 +10,42 @@
         android:id="@+id/contactavatar"
         android:layout_width="@dimen/w_h_forthy_dp"
         android:layout_height="@dimen/w_h_forthy_dp"
-        android:contentDescription="@string/contact_photo_thumbnail"
-        android:layout_marginStart="@dimen/margin_sixteen_dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/margin_eight_dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
         android:layout_marginTop="@dimen/margin_eight_dp"
+        android:contentDescription="@string/contact_photo_thumbnail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/contactname"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/contactavatar"
-        android:layout_marginStart="@dimen/margin_sixteen_dp"
         android:layout_marginEnd="@dimen/margin_eight_dp"
-        tools:text="Google"
-        android:textStyle="bold"
-        android:textAlignment="viewStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/margin_sixteen_dp"
         android:layout_marginTop="@dimen/margin_eight_dp"
-        app:layout_constraintHorizontal_bias="0.0" />
-    
+        android:textAlignment="viewStart"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/contactavatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Google" />
+
     <TextView
         android:id="@+id/contactlastinteraction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/contactavatar"
+        android:layout_marginEnd="@dimen/margin_eight_dp"
         android:layout_marginStart="@dimen/margin_sixteen_dp"
         android:layout_marginTop="@dimen/margin_six_dp"
         android:textAlignment="viewStart"
-        tools:text="last interacted always"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactname"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginEnd="@dimen/margin_eight_dp" />
+        app:layout_constraintStart_toEndOf="@+id/contactavatar"
+        app:layout_constraintTop_toBottomOf="@+id/contactname"
+        tools:text="last interacted always" />
 
 </android.support.constraint.ConstraintLayout>

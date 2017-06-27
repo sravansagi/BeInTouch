@@ -16,7 +16,6 @@ import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.utility.Utilities;
 import com.sravan.and.beintouch.widget.BeInTouchWidget;
 
-import timber.log.Timber;
 import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 /**
@@ -25,37 +24,29 @@ import static com.sravan.and.beintouch.data.BeInTouchContract.ContactsEntry;
 
 public class AddContactEntry extends AsyncTask<Uri, Void, String> {
 
-    private Context context;
-
     private static final String[] CONTACT_PICKER_OUTPUT_PROJECTION = {ContactsContract.Contacts._ID,
             ContactsContract.Contacts.LOOKUP_KEY,
             ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
             ContactsContract.Contacts.PHOTO_URI};
-
     private static final int CONTACTS_ID_COLUMN = 0;
     private static final int LOOKUP_COLUMN = 1;
     private static final int THUMBNAIL_PHOTO_COLUMN = 2;
     private static final int NUMBER_COLUMN = 3;
-    private static final int NAME_COLUMN  = 4;
-    private static final int PHOTO_COLUMN  = 5;
-
-
+    private static final int NAME_COLUMN = 4;
+    private static final int PHOTO_COLUMN = 5;
     private static final String[] CALLLOG_CONTACT_PROJECTION = {CallLog.Calls._ID,
             CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE,
             CallLog.Calls.DURATION};
-
-    private static final int DATE_COLUMN  = 3;
-
+    private static final int DATE_COLUMN = 3;
     private static final String[] CONTACT_ENTRY_ID = {ContactsContract.Contacts._ID};
-
     private static final String SELECTION_CONTACT_ENTRY = ContactsEntry.COLUMN_DISPLAYNAME + " = ? AND " +
             ContactsEntry.COLUMN_NUMBER + " = ?";
-
     private static final String SELECTION_CALLLOG_CONTACT = CallLog.Calls.NUMBER + " LIKE ?";
+    private Context context;
 
     public AddContactEntry(Context context) {
         this.context = context;
@@ -69,13 +60,14 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
      * not added already then Android Call Log Content Provider will be queried to get the last contacted details of the
      * selected contact. If the selected contact has a valid last interaction value, that value gets added in the
      * last contacted column of the contact table     *
+     *
      * @param uri
      * @return
      */
     @Override
     protected String doInBackground(Uri... uri) {
-        Uri contactCntPro ;
-        if (uri!=null && uri[0].toString().length() != 0){
+        Uri contactCntPro;
+        if (uri != null && uri[0].toString().length() != 0) {
             contactCntPro = uri[0];
             Cursor cursor = context.getContentResolver().query(contactCntPro,
                     CONTACT_PICKER_OUTPUT_PROJECTION,
@@ -90,7 +82,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 beInTouchContact.setLookup(cursor.getString(LOOKUP_COLUMN));
                 beInTouchContact.setContactThumbnailPhotoID(cursor.getString(THUMBNAIL_PHOTO_COLUMN));
                 beInTouchContact.setPhotoID(cursor.getString(PHOTO_COLUMN));
-                String[] selectionargs = {beInTouchContact.getName(),beInTouchContact.getPhoneNumber()};
+                String[] selectionargs = {beInTouchContact.getName(), beInTouchContact.getPhoneNumber()};
 
                 // The below query is to check if the contact is already added to the database table
                 Cursor cursorContact = context.getContentResolver().query(ContactsEntry.CONTENT_URI,
@@ -105,16 +97,16 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
                 }
 
                 // The below query is to check if the user has contacted the selected contact
-                if(Utilities.checkPermission(context)){
+                if (Utilities.checkPermission(context)) {
                     String phoneNumberwithoutSpaces = beInTouchContact.getPhoneNumber().replaceAll(" ", "");
                     String phoneNumberwithoutEncoding = phoneNumberwithoutSpaces.replace("\u202A", "").replace("\u202C", "");
                     Cursor callLogofContact = context.getContentResolver().query(CallLog.Calls.CONTENT_URI,
                             CALLLOG_CONTACT_PROJECTION,
                             SELECTION_CALLLOG_CONTACT,
-                            new String[]{"%" + phoneNumberwithoutEncoding +"%"},
+                            new String[]{"%" + phoneNumberwithoutEncoding + "%"},
                             CallLog.Calls.DEFAULT_SORT_ORDER);
 
-                    if (callLogofContact!= null && callLogofContact.moveToFirst()){
+                    if (callLogofContact != null && callLogofContact.moveToFirst()) {
                         beInTouchContact.setLastcontacted(callLogofContact.getLong(DATE_COLUMN));
                         callLogofContact.close();
                     }
@@ -123,7 +115,7 @@ public class AddContactEntry extends AsyncTask<Uri, Void, String> {
             }
             ContentValues contactCV = beInTouchContact.createCVforContact();
             Uri returnUri = context.getContentResolver().insert(ContactsEntry.CONTENT_URI, contactCV);
-            if (returnUri != null && returnUri.toString().length() > 0){
+            if (returnUri != null && returnUri.toString().length() > 0) {
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                         new ComponentName(context, BeInTouchWidget.class));

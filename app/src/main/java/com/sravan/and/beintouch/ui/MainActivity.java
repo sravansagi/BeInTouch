@@ -25,8 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,14 +48,11 @@ import com.sravan.and.beintouch.utility.Utilities;
 
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,ContactsEntryCursorAdapter.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, ContactsEntryCursorAdapter.OnItemClickListener {
 
     private static final int CONTACT_PICKER_RESULT = 1001;
     private static final int CONTACTS_ENTRY_LOADER = 2001;
     private static final int CALL_LOG_LOADER = 2002;
-
-    private Parcelable mLayoutManagerSavedState;
-
     private static final String[] CONTACTS_ENTRY_LOADER_PROJECTION = {BeInTouchContract.ContactsEntry._ID,
             BeInTouchContract.ContactsEntry.COLUMN_DISPLAYNAME,
             BeInTouchContract.ContactsEntry.COLUMN_NUMBER,
@@ -66,24 +61,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             BeInTouchContract.ContactsEntry.COLUMN_THUMBNAIL_PHOTO_ID,
             BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED,
             BeInTouchContract.ContactsEntry.COLUMN_PHOTO_ID};
-
-    private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID,CallLog.Calls.NUMBER,
+    private static final String[] CALLLOG_PROJECTION = {CallLog.Calls._ID, CallLog.Calls.NUMBER,
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE,
             CallLog.Calls.DURATION,
             CallLog.Calls.CACHED_NAME};
-
-    private MultiplePermissionsListener allPermissionsListener;
     RecyclerView mRecyclerView;
     TextView emptytextView;
     Cursor mcursor;
     RecyclerView.LayoutManager layoutManager;
     ContactsEntryCursorAdapter contactsEntryCursorAdapter;
+    private Parcelable mLayoutManagerSavedState;
+    private MultiplePermissionsListener allPermissionsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey("LAYOUTPOSITION")){
+        if (savedInstanceState != null && savedInstanceState.containsKey("LAYOUTPOSITION")) {
             mLayoutManagerSavedState = savedInstanceState.getParcelable("LAYOUTPOSITION");
         }
         setContentView(R.layout.activity_main);
@@ -92,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         TextView toolbarText = (TextView) findViewById(R.id.toolbar_text);
         toolbarText.setText(getResources().getString(R.string.app_name));
         Typeface typeface = FontCache.get("fonts/Pacifico-Regular.ttf", getApplicationContext());
-        if (typeface!=null){
+        if (typeface != null) {
             toolbarText.setTypeface(typeface);
         }
         allPermissionsListener = new SampleMultiplePermissionListener(this);
@@ -100,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 .withPermissions(Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS)
                 .withListener(allPermissionsListener)
                 .withErrorListener(new PermissionRequestErrorListener() {
-                    @Override public void onError(DexterError error) {
+                    @Override
+                    public void onError(DexterError error) {
                         Timber.e("There was an error: " + error.toString());
                     }
                 }).check();
@@ -130,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView = (RecyclerView) findViewById(R.id.contacts_entry_recycleview);
         layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null,BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
+        contactsEntryCursorAdapter = new ContactsEntryCursorAdapter(null, BeInTouchContract.ContactsEntry.COLUMN_LAST_CONTACTED, this, this);
         mRecyclerView.setAdapter(contactsEntryCursorAdapter);
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -145,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 //Remove swiped item from list and notify the RecyclerView
                 final int position = viewHolder.getAdapterPosition();
-                if (mcursor != null && mcursor.moveToPosition(position)){
+                if (mcursor != null && mcursor.moveToPosition(position)) {
                     DeleteContactEntry deleteContactEntry = new DeleteContactEntry(MainActivity.this, contactsEntryCursorAdapter);
                     deleteContactEntry.execute(mcursor.getLong(0));
                 }
@@ -155,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
         getLoaderManager().initLoader(CONTACTS_ENTRY_LOADER, null, this);
-        if(Utilities.checkPermission(this)){
+        if (Utilities.checkPermission(this)) {
             getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
         }
 
@@ -169,21 +164,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * This method is part of the dextor library and is called when user allows a permission
+     *
      * @param permission the permission contains the name of permission that user allowed
      */
     public void showPermissionGranted(String permission) {
-        if(Utilities.checkPermission(this)){
+        if (Utilities.checkPermission(this)) {
             getLoaderManager().initLoader(CALL_LOG_LOADER, null, this);
         }
     }
 
     /**
      * This method is part of the dextor library and is called when user deny a permission
+     *
      * @param permission the permission contains the name of permission that user denied
      */
     public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
         Toast.makeText(this,
-                getResources().getString(R.string.permission_denied,getTypeFromPermission(permission)),
+                getResources().getString(R.string.permission_denied, getTypeFromPermission(permission)),
                 Toast.LENGTH_LONG).show();
         finish();
     }
@@ -194,14 +191,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * before continuing the with permission dialog. The permission identifer is very importance in terms of identifying
      * the permission for showing the rationale. If a new dangarous permission is added, Then the corresponding permission
      * has to be checked in the {@link SampleMultiplePermissionListener} onPermissionRationaleShouldBeShown method
+     *
      * @param token
      * @param permissionIdentifier
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void showPermissionRationale(final PermissionToken token, int permissionIdentifier) {
 
-        String permissionMessage = "" ;
-        switch (permissionIdentifier){
+        String permissionMessage = "";
+        switch (permissionIdentifier) {
             case 1:
                 permissionMessage = getResources().getString(R.string.permission_rationale_call);
                 break;
@@ -218,19 +216,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.permission_dialog_title))
                 .setMessage(permissionMessage)
                 .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         token.cancelPermissionRequest();
                     }
                 })
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         token.continuePermissionRequest();
                     }
                 })
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override public void onDismiss(DialogInterface dialog) {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
                         token.cancelPermissionRequest();
                     }
                 })
@@ -261,8 +262,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Uri contactPickerResultUri = data.getData();
             AddContactEntry addContactEntry = new AddContactEntry(this);
             addContactEntry.execute(contactPickerResultUri);
+        }
     }
-}
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -290,11 +291,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        switch (loader.getId()){
+        switch (loader.getId()) {
             case CONTACTS_ENTRY_LOADER:
                 mcursor = data;
                 contactsEntryCursorAdapter.changeCursor(mcursor);
-                if (contactsEntryCursorAdapter.getItemCount() > 0){
+                if (contactsEntryCursorAdapter.getItemCount() > 0) {
                     emptytextView.setVisibility(View.GONE);
                     mRecyclerView.setVisibility(View.VISIBLE);
                 } else {
@@ -306,9 +307,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     mRecyclerView.setVisibility(View.GONE);
                 }
 
-                if(mRecyclerView.getVisibility() == View.VISIBLE
+                if (mRecyclerView.getVisibility() == View.VISIBLE
                         && mLayoutManagerSavedState != null
-                        && layoutManager != null){
+                        && layoutManager != null) {
                     layoutManager.onRestoreInstanceState(mLayoutManagerSavedState);
                     mLayoutManagerSavedState = null;
                 }
@@ -329,11 +330,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * onItemClick method is the call back listener that is defined and called when an item is clicked in the
      * recycler adapter. Here the required parcelable infromation will is captured in an intent and is passed to
      * the required activity/fragment
+     *
      * @param position the number in the list displayed in the recycler view
      */
     @Override
     public void onItemClick(int position) {
-        if (contactsEntryCursorAdapter != null){
+        if (contactsEntryCursorAdapter != null) {
             //Uri uri = contactsEntryCursorAdapter.getContactLookupUri(position);
             BeInTouchContact beInTouchContact = contactsEntryCursorAdapter.createContactfromCursor(position);
             //Toast.makeText(this, "Item at" + uri.toString() + " position is clicked", Toast.LENGTH_SHORT).show();
@@ -346,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(contactsEntryCursorAdapter != null){
+        if (contactsEntryCursorAdapter != null) {
             outState.putParcelable("LAYOUTPOSITION", mRecyclerView.getLayoutManager().onSaveInstanceState());
         }
         super.onSaveInstanceState(outState);

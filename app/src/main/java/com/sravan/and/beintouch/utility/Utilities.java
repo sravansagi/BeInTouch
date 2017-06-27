@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -33,7 +32,7 @@ public class Utilities {
 
     private static boolean sInitialized;
 
-    public static boolean checkPermission(Context context){
+    public static boolean checkPermission(Context context) {
         boolean logs = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED;
         boolean contacts = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
         return (logs & contacts);
@@ -58,7 +57,7 @@ public class Utilities {
         sInitialized = true;
     }
 
-    public static void logFirebaseEvent(Context context, String eventName){
+    public static void logFirebaseEvent(Context context, String eventName) {
         FirebaseAnalytics.getInstance(context).logEvent(eventName, null);
     }
 }

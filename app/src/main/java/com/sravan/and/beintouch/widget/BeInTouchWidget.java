@@ -22,8 +22,8 @@ public class BeInTouchWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.be_in_touch_widget);
         Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
-        views.setOnClickPendingIntent(R.id.widget_title,pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widget_title, pendingIntent);
 
         views.setRemoteAdapter(R.id.widget_list,
                 new Intent(context, BeInTouchWidgetService.class));

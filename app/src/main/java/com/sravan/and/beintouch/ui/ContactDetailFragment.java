@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.sravan.and.beintouch.R;
 import com.sravan.and.beintouch.adapters.DetailContactHistoryAdapter;
@@ -26,12 +27,13 @@ import com.sravan.and.beintouch.bean.BeInTouchContact;
 import com.sravan.and.beintouch.bean.CallEntry;
 import com.sravan.and.beintouch.tasks.RetrieveCallLogsforSelectedContact;
 import com.sravan.and.beintouch.utility.Utilities;
+
 import java.util.ArrayList;
 
 import timber.log.Timber;
 
 
-public class ContactDetailFragment extends Fragment implements RetrieveCallLogsforSelectedContact.FragmentCallback{
+public class ContactDetailFragment extends Fragment implements RetrieveCallLogsforSelectedContact.FragmentCallback {
 
     BeInTouchContact beInTouchContact;
     RecyclerView mRecyclerView;
@@ -54,39 +56,39 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Timber.d("onCreateView");
-        View rootView =  inflater.inflate(R.layout.fragment_contact_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_contact_detail, container, false);
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (savedInstanceState != null ){
-            if (savedInstanceState.containsKey("CONTACTDETAILS")){
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("CONTACTDETAILS")) {
                 callEntries = savedInstanceState.getParcelableArrayList("CONTACTDETAILS");
             }
-            if (savedInstanceState.containsKey("DETAILLAYOUTPOSITION")){
+            if (savedInstanceState.containsKey("DETAILLAYOUTPOSITION")) {
                 mLayoutManagerSavedState = savedInstanceState.getParcelable("DETAILLAYOUTPOSITION");
             }
 
         }
         Intent intent = getActivity().getIntent();
-        if (intent!= null){
+        if (intent != null) {
             beInTouchContact = intent.getParcelableExtra(Intent.EXTRA_TEXT);
-            if(beInTouchContact != null){
+            if (beInTouchContact != null) {
                 CollapsingToolbarLayout collapsingToolbar =
                         (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
                 collapsingToolbar.setTitle(beInTouchContact.getName());
                 boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
 
-                if (isRightToLeft){
+                if (isRightToLeft) {
                     collapsingToolbar.setExpandedTitleGravity(Gravity.RIGHT | Gravity.BOTTOM);
                     collapsingToolbar.setCollapsedTitleGravity(Gravity.RIGHT);
                 }
 
                 ImageView contactPhotoView = (ImageView) rootView.findViewById(R.id.backdrop);
-                if((beInTouchContact.getPhotoID()!= null && beInTouchContact.getPhotoID().length() > 0)){
+                if ((beInTouchContact.getPhotoID() != null && beInTouchContact.getPhotoID().length() > 0)) {
                     Glide.with(getContext())
                             .load(beInTouchContact.getPhotoID())
                             .into(contactPhotoView);
-                } else if(beInTouchContact.getContactThumbnailPhotoID()!= null && beInTouchContact.getContactThumbnailPhotoID().length() > 0){
+                } else if (beInTouchContact.getContactThumbnailPhotoID() != null && beInTouchContact.getContactThumbnailPhotoID().length() > 0) {
                     Glide.with(getContext())
                             .load(beInTouchContact.getContactThumbnailPhotoID())
                             .into(contactPhotoView);
@@ -95,10 +97,10 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
                 mRecyclerView = (RecyclerView) rootView.findViewById(R.id.contact_detail_recyclerview);
                 layoutManager = new LinearLayoutManager(getContext());
                 mRecyclerView.setLayoutManager(layoutManager);
-                if (callEntries != null && callEntries.size()>0){
+                if (callEntries != null && callEntries.size() > 0) {
                     onTaskDone(callEntries);
                 } else {
-                    if(Utilities.checkPermission(getContext())){
+                    if (Utilities.checkPermission(getContext())) {
                         RetrieveCallLogsforSelectedContact retrieveCallLogsforSelectedContact = new RetrieveCallLogsforSelectedContact(getContext(), this);
                         retrieveCallLogsforSelectedContact.execute(beInTouchContact);
                     }
@@ -111,19 +113,19 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (beInTouchContact.getPhoneNumber() != null){
-                    Intent callContactIntent =  new Intent(Intent.ACTION_VIEW);
+                if (beInTouchContact.getPhoneNumber() != null) {
+                    Intent callContactIntent = new Intent(Intent.ACTION_VIEW);
                     PackageManager packageManager = getContext().getPackageManager();
                     if (callContactIntent.resolveActivity(packageManager) != null) {
                         Utilities.logFirebaseEvent(getContext(), getResources().getString(R.string.call_contact_event));
-                        callContactIntent.setData(Uri.parse("tel:"+ beInTouchContact.getPhoneNumber()));
+                        callContactIntent.setData(Uri.parse("tel:" + beInTouchContact.getPhoneNumber()));
                         startActivity(callContactIntent);
                     } else {
-                        Toast.makeText(getContext(),getResources().getString(R.string.no_application_to_make_phone_call),
+                        Toast.makeText(getContext(), getResources().getString(R.string.no_application_to_make_phone_call),
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(),getResources().getString(R.string.problem_opening_selected_contact),
+                    Toast.makeText(getContext(), getResources().getString(R.string.problem_opening_selected_contact),
                             Toast.LENGTH_LONG).show();
                 }
             }
@@ -151,17 +153,17 @@ public class ContactDetailFragment extends Fragment implements RetrieveCallLogsf
     @Override
     public void onResume() {
         super.onResume();
-        if(mRecyclerView.getVisibility() == View.VISIBLE
+        if (mRecyclerView.getVisibility() == View.VISIBLE
                 && mLayoutManagerSavedState != null
-                && layoutManager != null){
+                && layoutManager != null) {
             layoutManager.onRestoreInstanceState(mLayoutManagerSavedState);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if(mRecyclerView != null && detailContactHistoryAdapter != null && detailContactHistoryAdapter.getItemCount() > 0){
-            outState.putParcelableArrayList("CONTACTDETAILS",detailContactHistoryAdapter.getCallEntries());
+        if (mRecyclerView != null && detailContactHistoryAdapter != null && detailContactHistoryAdapter.getItemCount() > 0) {
+            outState.putParcelableArrayList("CONTACTDETAILS", detailContactHistoryAdapter.getCallEntries());
             outState.putParcelable("DETAILLAYOUTPOSITION", mRecyclerView.getLayoutManager().onSaveInstanceState());
         }
         super.onSaveInstanceState(outState);

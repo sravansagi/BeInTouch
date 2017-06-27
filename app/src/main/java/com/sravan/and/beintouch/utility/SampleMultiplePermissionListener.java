@@ -34,32 +34,34 @@ import java.util.List;
  */
 public class SampleMultiplePermissionListener implements MultiplePermissionsListener {
 
-  private final MainActivity activity;
+    private final MainActivity activity;
 
-  public SampleMultiplePermissionListener(MainActivity activity) {
-    this.activity = activity;
-  }
-
-  @Override public void onPermissionsChecked(MultiplePermissionsReport report) {
-    for (PermissionGrantedResponse response : report.getGrantedPermissionResponses()) {
-      activity.showPermissionGranted(response.getPermissionName());
+    public SampleMultiplePermissionListener(MainActivity activity) {
+        this.activity = activity;
     }
 
-    for (PermissionDeniedResponse response : report.getDeniedPermissionResponses()) {
-      activity.showPermissionDenied(response.getPermissionName(), response.isPermanentlyDenied());
-    }
-  }
+    @Override
+    public void onPermissionsChecked(MultiplePermissionsReport report) {
+        for (PermissionGrantedResponse response : report.getGrantedPermissionResponses()) {
+            activity.showPermissionGranted(response.getPermissionName());
+        }
 
-  @Override public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions,
-      PermissionToken token) {
-    int permissionIdentifier = 0;
-    for (PermissionRequest permission:permissions) {
-      if (Manifest.permission.READ_CALL_LOG.equalsIgnoreCase(permission.getName())){
-        permissionIdentifier++;
-      } else if(Manifest.permission.READ_CONTACTS.equalsIgnoreCase(permission.getName())){
-        permissionIdentifier = permissionIdentifier+2;
-      }
+        for (PermissionDeniedResponse response : report.getDeniedPermissionResponses()) {
+            activity.showPermissionDenied(response.getPermissionName(), response.isPermanentlyDenied());
+        }
     }
-    activity.showPermissionRationale(token, permissionIdentifier);
-  }
+
+    @Override
+    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions,
+                                                   PermissionToken token) {
+        int permissionIdentifier = 0;
+        for (PermissionRequest permission : permissions) {
+            if (Manifest.permission.READ_CALL_LOG.equalsIgnoreCase(permission.getName())) {
+                permissionIdentifier++;
+            } else if (Manifest.permission.READ_CONTACTS.equalsIgnoreCase(permission.getName())) {
+                permissionIdentifier = permissionIdentifier + 2;
+            }
+        }
+        activity.showPermissionRationale(token, permissionIdentifier);
+    }
 }
